@@ -104,6 +104,68 @@ pnpm dev
 - Google Gemini 2.0 Flash
 - fal.ai (FLUX 이미지 생성)
 
+## 🔄 CI/CD
+
+### GitHub Actions Workflow
+
+`.github/workflows/ci.yml`에서 다음 단계를 자동 실행합니다:
+
+1. **Lint & Type Check**: TypeScript 컴파일 및 ESLint 검사
+2. **Unit Tests**: Jest 테스트 실행
+3. **Build Check**: 전체 앱 빌드 확인
+4. **Deploy Frontend** (main 브랜치): Vercel에 자동 배포
+5. **Deploy Backend** (main 브랜치): Railway에 자동 배포
+
+### 배포 설정
+
+#### Required GitHub Secrets
+
+GitHub Repository Settings → Secrets and variables → Actions에서 다음 시크릿을 설정하세요:
+
+```
+VERCEL_TOKEN          # Vercel 배포 토큰
+VERCEL_ORG_ID         # Vercel 조직 ID
+VERCEL_PROJECT_ID     # Vercel 프로젝트 ID
+RAILWAY_TOKEN         # Railway 배포 토큰
+```
+
+#### Vercel 배포 설정
+
+```bash
+# Vercel CLI 설치 및 프로젝트 링크
+npm i -g vercel
+cd apps/web
+vercel link
+
+# Vercel 토큰 생성
+vercel token create
+
+# 조직 및 프로젝트 ID 확인
+cat .vercel/project.json
+```
+
+#### Railway 배포 설정
+
+```bash
+# Railway CLI 설치 및 프로젝트 초기화
+npm i -g @railway/cli
+railway login
+cd apps/workflow-engine
+railway init
+
+# Railway 토큰 생성
+railway token create
+```
+
+Railway Dashboard에서 다음 환경 변수를 설정하세요:
+- `SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `REDIS_URL`
+- `OPENAI_API_KEY`
+- `ANTHROPIC_API_KEY`
+- `GOOGLE_AI_API_KEY`
+- `FAL_AI_API_KEY`
+
 ## 📈 Development Roadmap
 
 ### Phase 1: MVP (3-6개월)
