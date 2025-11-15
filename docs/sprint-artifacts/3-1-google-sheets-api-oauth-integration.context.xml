@@ -1,0 +1,195 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>3</epicId>
+    <storyId>1</storyId>
+    <title>Google Sheets API OAuth 연동</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-15</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/3-1-google-sheets-api-oauth-integration.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>사용자</asA>
+    <iWant>Google Sheets 계정을 연동할 수 있어</iWant>
+    <soThat>Sheets에서 콘텐츠를 기획할 수 있다</soThat>
+    <tasks>
+      <task id="1" ac="1">
+        <title>Google Cloud Console 설정</title>
+        <subtasks>
+          <subtask>OAuth 2.0 클라이언트 ID 생성</subtask>
+          <subtask>필요한 API 활성화 (Google Sheets API, Google Drive API)</subtask>
+          <subtask>리다이렉트 URI 설정: {BACKEND_URL}/api/auth/google-sheets/callback</subtask>
+          <subtask>환경 변수 설정 (GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET)</subtask>
+        </subtasks>
+      </task>
+      <task id="2" ac="1,2,3">
+        <title>Backend OAuth 플로우 구현</title>
+        <subtasks>
+          <subtask>NestJS에 GoogleSheetsAuthModule 생성</subtask>
+          <subtask>OAuth 인증 URL 생성 엔드포인트 구현 (POST /api/auth/google-sheets/connect)</subtask>
+          <subtask>OAuth 콜백 핸들러 구현 (GET /api/auth/google-sheets/callback)</subtask>
+          <subtask>Authorization Code를 Access/Refresh Token으로 교환</subtask>
+          <subtask>Supabase Vault 통합 또는 pgcrypto 암호화 구현</subtask>
+        </subtasks>
+      </task>
+      <task id="3" ac="2,3,4">
+        <title>토큰 저장 및 관리</title>
+        <subtasks>
+          <subtask>connected_accounts 테이블 마이그레이션 생성</subtask>
+          <subtask>RLS 정책 적용 (사용자별 격리)</subtask>
+          <subtask>토큰 암호화/복호화 서비스 구현</subtask>
+          <subtask>토큰 자동 갱신 로직 구현 (BullMQ 스케줄러)</subtask>
+          <subtask>토큰 만료 감지 및 갱신 테스트</subtask>
+        </subtasks>
+      </task>
+      <task id="4" ac="5,6,7">
+        <title>Frontend 연동 UI 구현</title>
+        <subtasks>
+          <subtask>Google Sheets 연동 버튼 컴포넌트 생성</subtask>
+          <subtask>OAuth 플로우 트리거 및 리다이렉션 처리</subtask>
+          <subtask>연동 성공/실패 토스트 알림 구현</subtask>
+          <subtask>연동된 계정 정보 표시 컴포넌트</subtask>
+          <subtask>재시도 옵션이 있는 오류 처리 UI</subtask>
+        </subtasks>
+      </task>
+      <task id="5" ac="all">
+        <title>테스트 작성</title>
+        <subtasks>
+          <subtask>OAuth 플로우 단위 테스트</subtask>
+          <subtask>토큰 암호화/복호화 테스트</subtask>
+          <subtask>토큰 자동 갱신 테스트</subtask>
+          <subtask>E2E 연동 플로우 테스트</subtask>
+        </subtasks>
+      </task>
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    <criterion id="1">Google OAuth 동의 화면에서 올바른 권한(spreadsheets, drive.file)을 요청한다</criterion>
+    <criterion id="2">Google 계정 선택 및 권한 승인 후 계정 정보가 connected_accounts 테이블에 저장된다</criterion>
+    <criterion id="3">Access Token과 Refresh Token이 Supabase Vault에 암호화되어 저장된다</criterion>
+    <criterion id="4">토큰 만료 1시간 전 자동 갱신이 동작한다</criterion>
+    <criterion id="5">연동 성공 시 "Google Sheets가 연동되었습니다" 토스트 알림이 표시된다</criterion>
+    <criterion id="6">연동 실패 시 명확한 오류 메시지와 재시도 옵션이 제공된다</criterion>
+    <criterion id="7">사용자는 연동된 Google 계정 정보(이메일)를 확인할 수 있다</criterion>
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-3.md</path>
+        <title>Epic 3 Technical Specification</title>
+        <section>Security</section>
+        <snippet>OAuth 토큰은 Supabase Vault에 AES-256 암호화 저장, Refresh Token은 별도 암호화 키로 이중 보호</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>System Architecture</title>
+        <section>보안 아키텍처</section>
+        <snippet>인증 토큰 관리와 암호화 정책, RLS 적용 방안</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epic Breakdown</title>
+        <section>Story 3.1</section>
+        <snippet>Google Sheets OAuth 연동 요구사항, Scopes, 기술 노트</snippet>
+      </doc>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>FR29-FR33</section>
+        <snippet>Google Sheets 연동을 통한 콘텐츠 기획 허브 요구사항</snippet>
+      </doc>
+    </docs>
+    <code>
+      <artifact>
+        <path>apps/web/src/lib/api/auth-api.ts</path>
+        <kind>service</kind>
+        <symbol>signInWithGoogle</symbol>
+        <lines>340-380</lines>
+        <reason>기존 Google OAuth 구현 참고 - 로그인용 OAuth 플로우</reason>
+      </artifact>
+      <artifact>
+        <path>apps/web/src/stores/authStore.ts</path>
+        <kind>store</kind>
+        <symbol>AuthStore</symbol>
+        <reason>인증 상태 관리 패턴 참고</reason>
+      </artifact>
+      <artifact>
+        <path>apps/web/src/components/auth/OAuthButtons.tsx</path>
+        <kind>component</kind>
+        <symbol>OAuthButtons</symbol>
+        <reason>OAuth 버튼 UI 패턴 참고</reason>
+      </artifact>
+      <artifact>
+        <path>apps/web/src/lib/supabase/client.ts</path>
+        <kind>config</kind>
+        <symbol>createClient</symbol>
+        <reason>Supabase 클라이언트 설정</reason>
+      </artifact>
+    </code>
+    <dependencies>
+      <node>
+        <package name="@supabase/supabase-js" version="^2.81.1">Supabase 클라이언트</package>
+        <package name="googleapis" version="^166.0.0">Google APIs 클라이언트 - Sheets API 사용</package>
+        <package name="react-hook-form" version="^7.66.0">폼 상태 관리</package>
+        <package name="zod" version="^4.1.12">스키마 검증</package>
+        <package name="zustand" version="^5.0.8">전역 상태 관리</package>
+      </node>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>OAuth 토큰은 서버사이드에서만 처리 (클라이언트 노출 금지)</constraint>
+    <constraint>Google OAuth Scopes: spreadsheets, drive.file로 제한</constraint>
+    <constraint>Supabase Vault 또는 pgcrypto를 사용한 AES-256 암호화 필수</constraint>
+    <constraint>Google Sheets API 할당량: 분당 300 읽기, 60 쓰기 요청</constraint>
+    <constraint>RLS 정책: auth.uid() = user_id로 사용자별 데이터 격리</constraint>
+    <constraint>토큰 자동 갱신: 만료 1시간 전 갱신</constraint>
+    <constraint>지수 백오프: API 실패 시 1초, 2초, 4초 간격 재시도</constraint>
+  </constraints>
+
+  <interfaces>
+    <interface>
+      <name>POST /api/auth/google-sheets/connect</name>
+      <kind>REST endpoint</kind>
+      <signature>Request: {} | Response: { authUrl: string }</signature>
+      <path>workflow-engine/src/modules/sheets/auth/sheets-auth.controller.ts</path>
+    </interface>
+    <interface>
+      <name>GET /api/auth/google-sheets/callback</name>
+      <kind>REST endpoint</kind>
+      <signature>Request: { code: string } | Response: { success: boolean, accountName: string }</signature>
+      <path>workflow-engine/src/modules/sheets/auth/sheets-auth.controller.ts</path>
+    </interface>
+    <interface>
+      <name>ConnectedAccount</name>
+      <kind>Database Entity</kind>
+      <signature>{ id, user_id, platform, account_name, access_token, refresh_token, token_expires_at, is_active }</signature>
+      <path>workflow-engine/src/modules/sheets/entities/connected-account.entity.ts</path>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>
+      Jest와 Vitest를 사용한 단위 테스트, Playwright를 사용한 E2E 테스트.
+      테스트는 __tests__ 디렉토리에 위치하며, 파일명은 *.test.ts 패턴을 따름.
+      Mock은 vi.fn() 또는 jest.fn() 사용, Supabase 클라이언트는 모킹 필수.
+    </standards>
+    <locations>
+      <location>apps/web/src/__tests__/*.test.ts</location>
+      <location>workflow-engine/src/**/*.spec.ts</location>
+      <location>e2e/*.spec.ts</location>
+    </locations>
+    <ideas>
+      <idea ac="1">OAuth URL에 올바른 scopes가 포함되는지 검증</idea>
+      <idea ac="2">계정 정보가 connected_accounts 테이블에 저장되는지 확인</idea>
+      <idea ac="3">토큰 암호화/복호화가 정상 동작하는지 테스트</idea>
+      <idea ac="4">토큰 만료 시간 계산과 갱신 로직 테스트</idea>
+      <idea ac="5">성공 토스트 알림 표시 테스트</idea>
+      <idea ac="6">실패 시 에러 메시지와 재시도 버튼 표시 테스트</idea>
+      <idea ac="7">연동된 계정 이메일 표시 테스트</idea>
+    </ideas>
+  </tests>
+</story-context>
