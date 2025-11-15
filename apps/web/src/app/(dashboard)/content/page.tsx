@@ -3,317 +3,327 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import ContentGeneratorModal from '@/components/content/ContentGeneratorModal';
 
-interface ContentItem {
+interface GeneratedContent {
   id: string;
-  title: string;
-  description: string;
-  content_type: string;
-  platform: string;
-  scheduled_date: string | null;
-  status: 'pending' | 'scheduled' | 'published' | 'failed';
-  review_status?: 'draft' | 'pending_review' | 'approved' | 'rejected';
+  type: string;
+  main_topic: string | null;
+  content: string;
+  title: string | null;
+  platform: string | null;
+  status: string;
+  quality_score: number | null;
   created_at: string;
-  generated_content?: string;
+  metadata: any;
 }
 
+/**
+ * 콘텐츠 관리 페이지
+ *
+ * AI로 생성된 콘텐츠 목록 및 관리
+ */
 export default function ContentPage() {
+  const [contents, setContents] = useState<GeneratedContent[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState<'all' | 'blog_post' | 'social_media'>('all');
+  const [showGeneratorModal, setShowGeneratorModal] = useState(false);
+  const [selectedContent, setSelectedContent] = useState<GeneratedContent | null>(null);
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
-  const [contents, setContents] = useState<ContentItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [filterStatus, setFilterStatus] = useState<string>('all');
-  const [filterPlatform, setFilterPlatform] = useState<string>('all');
+  const supabase = createClient();
 
   useEffect(() => {
-    const loadData = async () => {
-      const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+    loadContents();
+  }, [filter]);
 
+  const loadContents = async () => {
+    setLoading(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         router.push('/login');
         return;
       }
 
-      setUser(user);
-      await fetchContents();
-    };
-
-    loadData();
-  }, [router]);
-
-  const fetchContents = async () => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const supabase = createClient();
       let query = supabase
-        .from('content_calendar')
+        .from('generated_contents')
         .select('*')
+        .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
-      const { data, error: fetchError } = await query;
+      if (filter !== 'all') {
+        query = query.eq('type', filter);
+      }
 
-      if (fetchError) throw fetchError;
+      const { data, error } = await query;
 
-      setContents(data || []);
-    } catch (err: any) {
-      setError(err.message || '콘텐츠를 불러오는데 실패했습니다');
+      if (!error && data) {
+        setContents(data);
+      }
+    } catch (error) {
+      console.error('콘텐츠 로드 오류:', error);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
-  const filteredContents = contents.filter(item => {
-    if (filterStatus !== 'all' && item.status !== filterStatus) return false;
-    if (filterPlatform !== 'all' && item.platform !== filterPlatform) return false;
-    return true;
-  });
+  const handleStatusChange = async (contentId: string, newStatus: string) => {
+    try {
+      const { error } = await supabase
+        .from('generated_contents')
+        .update({ status: newStatus })
+        .eq('id', contentId);
 
-  const getStatusBadge = (status: string) => {
-    const badges = {
-      pending: 'bg-yellow-100 text-yellow-800',
-      scheduled: 'bg-blue-100 text-blue-800',
-      published: 'bg-green-100 text-green-800',
-      failed: 'bg-red-100 text-red-800',
-    };
-    const labels = {
-      pending: '대기',
-      scheduled: '예약됨',
-      published: '발행됨',
-      failed: '실패',
-    };
-    return (
-      <span
-        className={`px-3 py-1 rounded-full text-xs font-medium ${badges[status as keyof typeof badges]}`}
-      >
-        {labels[status as keyof typeof labels]}
-      </span>
-    );
+      if (!error) {
+        setContents(contents.map(c =>
+          c.id === contentId ? { ...c, status: newStatus } : c
+        ));
+      }
+    } catch (error) {
+      console.error('상태 변경 오류:', error);
+    }
   };
 
-  const getPlatformIcon = (platform: string) => {
-    const icons: { [key: string]: string } = {
-      blog: '📝',
-      instagram: '📷',
-      facebook: '👥',
-      twitter: '🐦',
-      linkedin: '💼',
-    };
-    return icons[platform] || '📄';
+  const handleDelete = async (contentId: string) => {
+    if (!confirm('정말 이 콘텐츠를 삭제하시겠습니까?')) {
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('generated_contents')
+        .delete()
+        .eq('id', contentId);
+
+      if (!error) {
+        setContents(contents.filter(c => c.id !== contentId));
+      }
+    } catch (error) {
+      console.error('삭제 오류:', error);
+    }
   };
 
-  if (isLoading) {
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case 'blog_post':
+        return '📝';
+      case 'social_media':
+        return '📱';
+      case 'subtopics':
+        return '🔤';
+      default:
+        return '📄';
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'draft':
+        return 'bg-gray-100 text-gray-800';
+      case 'review':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'approved':
+        return 'bg-green-100 text-green-800';
+      case 'rejected':
+        return 'bg-red-100 text-red-800';
+      case 'published':
+        return 'bg-blue-100 text-blue-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">콘텐츠 로딩 중...</p>
-        </div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => router.push('/dashboard')}
-              className="text-indigo-600 hover:text-indigo-700 font-medium"
-            >
-              ← 대시보드로 돌아가기
-            </button>
-          </div>
-          <div className="flex items-center gap-4">
-            <p className="text-sm font-medium text-gray-900">{user?.email}</p>
-            <button
-              onClick={async () => {
-                const supabase = createClient();
-                await supabase.auth.signOut();
-                router.push('/login');
-              }}
-              className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition"
-            >
-              로그아웃
-            </button>
-          </div>
-        </div>
-      </header>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* 헤더 */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">콘텐츠 관리</h1>
-          <p className="text-gray-600">import된 콘텐츠를 관리하고 발행 일정을 설정하세요</p>
-        </div>
-
-        {/* Filters */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
-          <div className="flex flex-wrap items-center gap-4">
-            <div className="flex items-center gap-2">
-              <label className="text-sm font-medium text-gray-700">상태:</label>
-              <select
-                value={filterStatus}
-                onChange={e => setFilterStatus(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm"
-              >
-                <option value="all">전체</option>
-                <option value="pending">대기</option>
-                <option value="scheduled">예약됨</option>
-                <option value="published">발행됨</option>
-                <option value="failed">실패</option>
-              </select>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">생성된 콘텐츠</h1>
+              <p className="mt-2 text-gray-600">
+                AI로 생성된 콘텐츠를 관리하고 편집하세요.
+              </p>
             </div>
-
-            <div className="flex items-center gap-2">
-              <label className="text-sm font-medium text-gray-700">플랫폼:</label>
-              <select
-                value={filterPlatform}
-                onChange={e => setFilterPlatform(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm"
-              >
-                <option value="all">전체</option>
-                <option value="blog">블로그</option>
-                <option value="instagram">Instagram</option>
-                <option value="facebook">Facebook</option>
-                <option value="twitter">Twitter</option>
-                <option value="linkedin">LinkedIn</option>
-              </select>
-            </div>
-
-            <div className="ml-auto">
-              <button
-                onClick={() => router.push('/calendar')}
-                className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-sm font-medium"
-              >
-                + 콘텐츠 Import
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {error && (
-          <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
-            {error}
-          </div>
-        )}
-
-        {/* Content List */}
-        {filteredContents.length === 0 ? (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
-            <svg
-              className="w-16 h-16 mx-auto mb-4 text-gray-300"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+            <button
+              onClick={() => setShowGeneratorModal(true)}
+              className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-              />
-            </svg>
+              <span>✨</span>
+              새 콘텐츠 생성
+            </button>
+          </div>
+        </div>
+
+        {/* 필터 탭 */}
+        <div className="flex gap-2 mb-6">
+          {(['all', 'blog_post', 'social_media'] as const).map((type) => (
+            <button
+              key={type}
+              onClick={() => setFilter(type)}
+              className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                filter === type
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+              }`}
+            >
+              {type === 'all' && '전체'}
+              {type === 'blog_post' && '📝 블로그'}
+              {type === 'social_media' && '📱 SNS'}
+              {type === 'all' && ` (${contents.length})`}
+            </button>
+          ))}
+        </div>
+
+        {/* 콘텐츠 목록 */}
+        {contents.length === 0 ? (
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
+            <div className="text-4xl mb-4">✨</div>
             <p className="text-gray-600 mb-4">
-              {filterStatus !== 'all' || filterPlatform !== 'all'
-                ? '필터 조건에 맞는 콘텐츠가 없습니다'
-                : '아직 콘텐츠가 없습니다'}
+              아직 생성된 콘텐츠가 없습니다.
             </p>
             <button
-              onClick={() => router.push('/calendar')}
-              className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-medium"
+              onClick={() => setShowGeneratorModal(true)}
+              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
             >
-              Google Sheets에서 Import하기
+              첫 콘텐츠 생성하기
             </button>
           </div>
         ) : (
-          <div className="space-y-4">
-            {filteredContents.map(item => (
+          <div className="grid gap-4">
+            {contents.map((content) => (
               <div
-                key={item.id}
-                className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition cursor-pointer"
-                onClick={() => router.push(`/content/${item.id}`)}
+                key={content.id}
+                className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow"
               >
-                <div className="flex items-start gap-4">
-                  <div className="text-4xl">{getPlatformIcon(item.platform)}</div>
-
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between mb-2">
-                      <div className="flex-1">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                          {item.title || '제목 없음'}
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    {/* 헤더 */}
+                    <div className="flex items-center gap-3 mb-3">
+                      <span className="text-2xl">{getTypeIcon(content.type)}</span>
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          {content.title || content.main_topic || '제목 없음'}
                         </h3>
-                        <p className="text-sm text-gray-600 line-clamp-2">
-                          {item.description || '설명 없음'}
-                        </p>
+                        <div className="flex items-center gap-3 mt-1">
+                          <span className={`px-2 py-1 text-xs font-medium rounded ${getStatusColor(content.status)}`}>
+                            {content.status}
+                          </span>
+                          {content.platform && (
+                            <span className="text-xs text-gray-500">
+                              {content.platform}
+                            </span>
+                          )}
+                          {content.quality_score && (
+                            <span className="text-xs text-gray-500">
+                              품질: {content.quality_score}%
+                            </span>
+                          )}
+                        </div>
                       </div>
-                      <div className="ml-4">{getStatusBadge(item.status)}</div>
                     </div>
 
-                    <div className="flex items-center gap-4 text-sm text-gray-500 mt-3">
-                      <span className="flex items-center gap-1">
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-                          />
-                        </svg>
-                        {item.content_type || 'blog'}
-                      </span>
-
-                      <span className="flex items-center gap-1">
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                          />
-                        </svg>
-                        {item.scheduled_date
-                          ? new Date(item.scheduled_date).toLocaleDateString('ko-KR')
-                          : '일정 없음'}
-                      </span>
-
-                      <span className="flex items-center gap-1">
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
-                        생성: {new Date(item.created_at).toLocaleDateString('ko-KR')}
-                      </span>
+                    {/* 콘텐츠 프리뷰 */}
+                    <div className="text-sm text-gray-600 line-clamp-3 mb-3">
+                      {content.content}
                     </div>
+
+                    {/* 메타데이터 */}
+                    <div className="flex items-center gap-4 text-xs text-gray-500">
+                      <span>{new Date(content.created_at).toLocaleDateString('ko-KR')}</span>
+                      {content.metadata?.wordCount && (
+                        <span>{content.metadata.wordCount}단어</span>
+                      )}
+                      {content.metadata?.readingTime && (
+                        <span>읽기 {content.metadata.readingTime}분</span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* 액션 버튼 */}
+                  <div className="flex items-center gap-2 ml-4">
+                    <button
+                      onClick={() => setSelectedContent(content)}
+                      className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                      title="미리보기"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                    </button>
+
+                    <button
+                      onClick={() => router.push(`/content/${content.id}/edit`)}
+                      className="p-2 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                      title="편집"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      </svg>
+                    </button>
+
+                    <button
+                      onClick={() => handleDelete(content.id)}
+                      className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                      title="삭제"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
                   </div>
                 </div>
               </div>
             ))}
+          </div>
+        )}
+
+        {/* 콘텐츠 생성 모달 */}
+        <ContentGeneratorModal
+          isOpen={showGeneratorModal}
+          onClose={() => setShowGeneratorModal(false)}
+          onSuccess={() => {
+            setShowGeneratorModal(false);
+            loadContents();
+          }}
+        />
+
+        {/* 콘텐츠 미리보기 모달 */}
+        {selectedContent && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                <h2 className="text-xl font-bold text-gray-900">
+                  콘텐츠 미리보기
+                </h2>
+                <button
+                  onClick={() => setSelectedContent(null)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <div className="p-6">
+                <div className="prose prose-lg max-w-none">
+                  <div className="whitespace-pre-wrap">{selectedContent.content}</div>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>

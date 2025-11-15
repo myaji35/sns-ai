@@ -72,18 +72,18 @@ development_status:
   epic-3-retrospective: optional
 
   # Epic 4: AI 콘텐츠 생성 엔진 (AI Content Generation Engine) - 12 stories
-  epic-4: backlog
-  4-1-multi-llm-provider-integration: backlog
+  epic-4: contexted
+  4-1-multi-llm-provider-integration: done
   4-2-bullmq-job-queue-setup-content-generation: backlog
-  4-3-ai-subtopic-generation-prompt-engineering: backlog
-  4-4-multi-llm-parallel-call-orchestrator: backlog
-  4-5-quality-evaluation-algorithm-best-content-selection: backlog
-  4-6-blog-post-generation-prompt-engineering: backlog
+  4-3-ai-subtopic-generation-prompt-engineering: done
+  4-4-multi-llm-parallel-call-orchestrator: done
+  4-5-quality-evaluation-algorithm-best-content-selection: done
+  4-6-blog-post-generation-prompt-engineering: done
   4-7-seo-meta-description-and-keywords-auto-generation: backlog
   4-8-content-generation-progress-realtime-update: backlog
-  4-9-user-profile-based-content-personalization: backlog
+  4-9-user-profile-based-content-personalization: done
   4-10-content-regeneration-feature-after-rejection: backlog
-  4-11-llm-api-cost-tracking-and-optimization: backlog
+  4-11-llm-api-cost-tracking-and-optimization: done
   4-12-ai-generation-completed-notification-realtime: backlog
   epic-4-retrospective: optional
 
