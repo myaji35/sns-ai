@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<story-context id="sns-ai/bmm/workflows/4-implementation/story-context" v="1.0">
+  <metadata>
+    <epicId>2</epicId>
+    <storyId>2.3</storyId>
+    <storyKey>2-3-login-page-and-session-management</storyKey>
+    <title>로그인 페이지 및 세션 관리</title>
+    <status>ready-for-dev</status>
+    <generatedAt>2025-11-15</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/2-3-login-page-and-session-management.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>기존 사용자</asA>
+    <iWant>이메일과 비밀번호로 로그인할 수 있어</iWant>
+    <soThat>ContentFlow AI의 대시보드에 접근할 수 있다</soThat>
+
+    <tasks>
+      <task n="1">
+        <title>로그인 페이지 UI 개발</title>
+        <description>/login/page.tsx 생성, 이메일/비밀번호 입력, 로그인 버튼, 링크들 (비밀번호 찾기, 회원가입)</description>
+      </task>
+      <task n="2">
+        <title>LogInForm 컴포넌트 개발</title>
+        <description>React Hook Form + Zod 검증, 실시간 유효성 검사, 에러 메시지, 로딩 상태</description>
+      </task>
+      <task n="3">
+        <title>로그인 API 함수 구현</title>
+        <description>auth-api.ts에 signIn() 함수 (이미 구현되어 있을 가능성), 에러 처리, 한글 메시지</description>
+      </task>
+      <task n="4">
+        <title>세션 관리 및 쿠키 저장</title>
+        <description>Next.js Middleware 설정, JWT 토큰 검증, 자동 갱신, httpOnly/Secure/SameSite 쿠키</description>
+      </task>
+      <task n="5">
+        <title>Route Protection Middleware</title>
+        <description>Next.js Middleware, 보호된 라우트 정의, 비로그인 사용자 리다이렉트</description>
+      </task>
+      <task n="6">
+        <title>토큰 갱신 로직</title>
+        <description>Supabase 자동 갱신 메커니즘, 토큰 만료 체크, 5분 전 자동 갱신</description>
+      </task>
+      <task n="7">
+        <title>에러 처리 및 사용자 피드백</title>
+        <description>Supabase 에러 처리, 한글화 메시지 (잘못된 자격증명, 존재하지 않는 계정, 네트워크)</description>
+      </task>
+      <task n="8">
+        <title>테스트 코드 작성</title>
+        <description>정상 로그인, 잘못된 비밀번호, 존재하지 않는 이메일, 토큰 만료, 보호된 라우트</description>
+      </task>
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    <criterion id="AC1">
+      <title>로그인 페이지 UI</title>
+      <requirements>
+        <req>/login 페이지 생성</req>
+        <req>이메일 입력 필드</req>
+        <req>비밀번호 입력 필드</req>
+        <req>"로그인" 버튼</req>
+        <req>"비밀번호를 잊으셨나요?" 링크</req>
+        <req>"회원가입" 링크</req>
+      </requirements>
+    </criterion>
+    <criterion id="AC2">
+      <title>이메일/비밀번호 로그인</title>
+      <requirements>
+        <req>Supabase Auth signInWithPassword() 메서드 사용</req>
+        <req>로그인 성공 시 JWT 토큰 획득</req>
+        <req>사용자 정보를 Zustand authStore에 저장</req>
+      </requirements>
+    </criterion>
+    <criterion id="AC3">
+      <title>자격증명 오류 처리</title>
+      <requirements>
+        <req>잘못된 이메일 형식 거부</req>
+        <req>잘못된 비밀번호: "이메일 또는 비밀번호가 틀렸습니다"</req>
+        <req>존재하지 않는 사용자: "존재하지 않는 계정입니다"</req>
+        <req>네트워크 에러: "연결 실패. 다시 시도해주세요"</req>
+      </requirements>
+    </criterion>
+    <criterion id="AC4">
+      <title>JWT 토큰 안전 저장</title>
+      <requirements>
+        <req>httpOnly, Secure, SameSite 속성으로 쿠키 저장</req>
+        <req>클라이언트 자바스크립트에서 토큰 접근 불가</req>
+        <req>서버사이드에서 토큰 검증</req>
+      </requirements>
+    </criterion>
+    <criterion id="AC5">
+      <title>토큰 만료 및 자동 갱신</title>
+      <requirements>
+        <req>Supabase 세션 자동 갱신</req>
+        <req>토큰 만료 시 자동 새 토큰 요청</req>
+        <req>만료된 세션 보호된 라우트 접근 시 /login 리다이렉트</req>
+      </requirements>
+    </criterion>
+    <criterion id="AC6">
+      <title>세션 관리</title>
+      <requirements>
+        <req>로그인 성공 시 /dashboard로 리다이렉트</req>
+        <req>"로그인 유지" (Remember Me) 옵션 (선택사항)</req>
+        <req>세션 유지 기간: 7일</req>
+      </requirements>
+    </criterion>
+    <criterion id="AC7">
+      <title>보호된 라우트 (Route Protection)</title>
+      <requirements>
+        <req>Next.js Middleware로 라우트 보호</req>
+        <req>보호된 라우트: /dashboard, /content, /calendar, /settings, /profile, /onboarding</req>
+        <req>비로그인 사용자 접근 시 /login으로 리다이렉트</req>
+        <req>로그인 사용자의 /login, /signup 접근 시 /dashboard로 리다이렉트</req>
+      </requirements>
+    </criterion>
+    <criterion id="AC8">
+      <title>사용자 경험</title>
+      <requirements>
+        <req>실시간 폼 유효성 검사 피드백</req>
+        <req>로딩 상태 표시</req>
+        <req>모바일 반응형 (44x44px 터치 타겟)</req>
+      </requirements>
+    </criterion>
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>ContentFlow AI - Product Requirements Document</title>
+        <section>Executive Summary, User Authentication Requirements</section>
+        <snippet>ContentFlow AI는 안전한 사용자 인증과 계정 관리를 통해 사용자가 개인화된 서비스를 받을 수 있어야 합니다.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>ContentFlow AI - Technical Architecture Document</title>
+        <section>Frontend Stack, Auth Integration, Route Protection</section>
+        <snippet>Next.js 15 Middleware를 통한 라우트 보호, Supabase Auth 통합, JWT 토큰 관리</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-2.md</path>
+        <title>Epic 2 Technical Specification - User Authentication</title>
+        <section>Story 2.3: Login Page & Session Management, Middleware Logic, Session Flow</section>
+        <snippet>Next.js Middleware를 사용한 보호된 라우트 관리, JWT 토큰 자동 갱신, httpOnly 쿠키 사용</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>ContentFlow AI - Epic & Story Breakdown</title>
+        <section>Epic 2: User Authentication</section>
+        <snippet>Epic 2는 회원가입(2.1), Google OAuth(2.2), 로그인(2.3), 비밀번호 재설정(2.4)을 포함합니다.</snippet>
+      </doc>
+    </docs>
+
+    <code>
+      <artifact>
+        <path>apps/web/src/lib/api/auth-api.ts</path>
+        <kind>service</kind>
+        <symbol>signIn, signOut, getSession, getCurrentUser</symbol>
+        <reason>기존 인증 API 레이어. signIn() 함수가 이미 구현되어 있음. 로그인 폼에서 호출</reason>
+      </artifact>
+      <artifact>
+        <path>apps/web/src/lib/schemas/auth.schema.ts</path>
+        <kind>schema</kind>
+        <symbol>signInSchema, SignInFormData</symbol>
+        <reason>로그인 폼 검증용 Zod 스키마. 이미 구현되어 있음</reason>
+      </artifact>
+      <artifact>
+        <path>apps/web/src/stores/authStore.ts</path>
+        <kind>state-management</kind>
+        <symbol>useAuthStore</symbol>
+        <reason>Zustand를 사용한 인증 상태 관리. 로그인 후 user 정보 저장</reason>
+      </artifact>
+      <artifact>
+        <path>apps/web/src/lib/supabase/client.ts</path>
+        <kind>client</kind>
+        <symbol>createClient</symbol>
+        <reason>Supabase 클라이언트. signInWithPassword() 메서드 사용</reason>
+      </artifact>
+      <artifact>
+        <path>apps/web/src/components/auth/SignUpForm.tsx</path>
+        <kind>component</kind>
+        <symbol>SignUpForm</symbol>
+        <reason>기존 회원가입 폼 컴포넌트. LogInForm의 UI/UX 참고용</reason>
+      </artifact>
+    </code>
+
+    <dependencies>
+      <dep ecosystem="node" name="@supabase/supabase-js" version="^2.81.1" reason="Supabase Auth signInWithPassword 메서드"/>
+      <dep ecosystem="node" name="next" version="15.0.3" reason="Middleware, 라우팅, SSR 지원"/>
+      <dep ecosystem="node" name="zustand" version="^5.0.8" reason="authStore 상태 관리"/>
+      <dep ecosystem="node" name="react" version="^19.0.0" reason="UI 컴포넌트"/>
+      <dep ecosystem="node" name="react-hook-form" version="^7.66.0" reason="폼 관리"/>
+      <dep ecosystem="node" name="zod" version="^4.1.12" reason="검증 스키마"/>
+      <dep ecosystem="node" name="typescript" version="^5.6.0" reason="타입 안전성"/>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>
+      <area>보안 - JWT 토큰 저장</area>
+      <rule>httpOnly, Secure, SameSite=Strict 속성 필수</rule>
+      <rule>클라이언트 자바스크립트에서 토큰 접근 불가</rule>
+      <rule>서버사이드 렌더링 시 쿠키 검증</rule>
+      <rationale>XSS 공격 방지, 쿠키 도용 방지</rationale>
+    </constraint>
+    <constraint>
+      <area>라우트 보호</area>
+      <rule>Next.js Middleware에서만 라우트 검증 (서버사이드)</rule>
+      <rule>보호된 라우트: /dashboard, /content, /calendar, /settings, /profile, /onboarding</rule>
+      <rule>공개 라우트: /, /login, /signup, /forgot-password, /reset-password</rule>
+      <rationale>클라이언트 사이드 리다이렉트는 우회 가능하므로 서버에서만 신뢰</rationale>
+    </constraint>
+    <constraint>
+      <area>토큰 갱신</area>
+      <rule>Supabase 자동 갱신 메커니즘 활용</rule>
+      <rule>토큰 만료 5분 전에 자동 갱신 (권장)</rule>
+      <rule>API 요청 실패 시 토큰 갱신 후 재시도 (선택사항)</rule>
+      <rationale>사용자 세션 연속성 보장</rationale>
+    </constraint>
+    <constraint>
+      <area>에러 메시지</area>
+      <rule>모든 에러 메시지는 한글화</rule>
+      <rule>잘못된 자격증명과 존재하지 않는 사용자 구분 (보안: 타이밍 공격 방지 고려)</rule>
+      <rationale>사용자 경험, 보안</rationale>
+    </constraint>
+    <constraint>
+      <area>UI 일관성</area>
+      <rule>Shadcn/ui 컴포넌트 사용 (Story 2.1과 동일)</rule>
+      <rule>LogInForm은 SignUpForm과 유사한 구조와 스타일</rule>
+      <rationale>일관된 사용자 경험</rationale>
+    </constraint>
+  </constraints>
+
+  <interfaces>
+    <interface>
+      <name>signIn()</name>
+      <kind>function-signature</kind>
+      <signature>async function signIn(email: string, password: string): Promise&lt;AuthResponse&gt;</signature>
+      <path>apps/web/src/lib/api/auth-api.ts</path>
+      <description>이메일/비밀번호로 로그인하고 사용자 정보와 JWT 토큰 반환</description>
+    </interface>
+    <interface>
+      <name>useAuthStore()</name>
+      <kind>zustand-hook</kind>
+      <signature>const { user, isAuthenticated, setUser } = useAuthStore()</signature>
+      <path>apps/web/src/stores/authStore.ts</path>
+      <description>인증 상태 관리. 로그인 후 user와 isAuthenticated 업데이트</description>
+    </interface>
+    <interface>
+      <name>Next.js Middleware</name>
+      <kind>middleware</kind>
+      <signature>middleware(request: NextRequest): NextResponse</signature>
+      <path>apps/web/src/middleware.ts (NEW)</path>
+      <description>라우트 보호, JWT 토큰 검증, 자동 갱신, 리다이렉트 처리</description>
+    </interface>
+    <interface>
+      <name>LogInForm Component</name>
+      <kind>react-component</kind>
+      <signature>&lt;LogInForm /&gt;</signature>
+      <path>apps/web/src/components/auth/LogInForm.tsx (NEW)</path>
+      <description>로그인 폼 컴포넌트. React Hook Form + Zod 통합</description>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>
+      테스트 프레임워크: Vitest (단위/통합 테스트). E2E: Playwright. 테스트 위치: apps/web/src/__tests__/. 파일명 패턴: [subject].test.ts. 모든 미들웨어는 별도 테스트 파일로 분리.
+    </standards>
+
+    <locations>
+      <location>apps/web/src/__tests__/*.test.ts</location>
+      <location>apps/web/src/__tests__/*.test.tsx</location>
+      <location>apps/web/src/__tests__/middleware*.test.ts</location>
+    </locations>
+
+    <ideas>
+      <idea ac="AC1">로그인 페이지 렌더링 - /login이 올바르게 렌더링되는지 확인</idea>
+      <idea ac="AC2">정상 로그인 - 올바른 이메일/비밀번호로 로그인 성공 확인</idea>
+      <idea ac="AC3">잘못된 비밀번호 - 올바른 에러 메시지 표시</idea>
+      <idea ac="AC3">존재하지 않는 이메일 - 올바른 에러 메시지 표시</idea>
+      <idea ac="AC4">쿠키 보안 - httpOnly, Secure, SameSite 속성 확인</idea>
+      <idea ac="AC5">토큰 갱신 - 만료된 토큰 자동 갱신 확인</idea>
+      <idea ac="AC6">대시보드 리다이렉트 - 로그인 성공 시 /dashboard로 리다이렉트</idea>
+      <idea ac="AC7">미들웨어 보호 - 비로그인 사용자의 보호된 라우트 접근 차단</idea>
+      <idea ac="AC7">로그인 사용자 리다이렉트 - 로그인 사용자의 /login 접근 시 /dashboard로 리다이렉트</idea>
+      <idea ac="AC8">모바일 반응형 - 모바일/태블릿/데스크톱에서 정상 작동</idea>
+      <idea general="true">E2E 테스트 - 전체 로그인 플로우 (입력 → 제출 → 인증 → 리다이렉트)</idea>
+      <idea general="true">세션 지속성 - 페이지 새로고침 후에도 세션 유지</idea>
+    </ideas>
+  </tests>
+</story-context>

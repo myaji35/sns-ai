@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<story-context id="sns-ai/bmm/workflows/4-implementation/story-context" v="1.0">
+  <metadata>
+    <epicId>2</epicId>
+    <storyId>2.2</storyId>
+    <storyKey>2-2-google-social-login-implementation</storyKey>
+    <title>Google 소셜 로그인 구현</title>
+    <status>ready-for-dev</status>
+    <generatedAt>2025-11-15</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/2-2-google-social-login-implementation.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>신규 또는 기존 사용자</asA>
+    <iWant>Google 계정으로 로그인할 수 있어</iWant>
+    <soThat>ContentFlow AI에 빠르게 접근할 수 있다</soThat>
+
+    <tasks>
+      <task n="1">
+        <title>Google OAuth 설정 (로컬 개발)</title>
+        <description>Supabase에서 Google Provider 활성화 및 로컬 개발용 OAuth 테스트 계정 설정</description>
+      </task>
+      <task n="2">
+        <title>OAuthButtons 컴포넌트 개발</title>
+        <description>Google 로그인 버튼 컴포넌트 생성, 스타일링, OAuth 플로우 트리거 및 에러 처리</description>
+      </task>
+      <task n="3">
+        <title>OAuth 핸들러 작성</title>
+        <description>signInWithGoogle() 함수 구현, 에러 처리 및 한글 에러 메시지 매핑</description>
+      </task>
+      <task n="4">
+        <title>Supabase Database Trigger 설정</title>
+        <description>PostgreSQL trigger로 auth.users → public.profiles 자동 삽입 구성</description>
+      </task>
+      <task n="5">
+        <title>SignUpForm에 Google 버튼 통합</title>
+        <description>OAuthButtons를 SignUpForm에 임포트하여 회원가입 페이지에 추가</description>
+      </task>
+      <task n="6">
+        <title>세션 관리 통합</title>
+        <description>Google 로그인 후 Zustand authStore 업데이트 및 /dashboard 리다이렉트</description>
+      </task>
+      <task n="7">
+        <title>에러 처리 및 사용자 피드백</title>
+        <description>Google OAuth 에러 처리 및 한글화된 사용자 친화적 메시지 구현</description>
+      </task>
+      <task n="8">
+        <title>테스트 코드 작성</title>
+        <description>단위테스트, 통합테스트, E2E 테스트 작성 및 통과</description>
+      </task>
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    <criterion id="AC1">
+      <title>Google OAuth 로그인 페이지</title>
+      <requirements>
+        <req>로그인/가입 페이지에 "Google로 계속하기" 버튼 표시</req>
+        <req>버튼 클릭 시 Google OAuth 동의 화면 표시</req>
+        <req>Google 계정 선택 및 인증</req>
+      </requirements>
+    </criterion>
+    <criterion id="AC2">
+      <title>회원가입 페이지에 Google 로그인</title>
+      <requirements>
+        <req>/signup 페이지에 Google 버튼 추가</req>
+        <req>기존 /signup/page.tsx에 OAuthButtons 컴포넌트 통합</req>
+      </requirements>
+    </criterion>
+    <criterion id="AC3">
+      <title>신규 사용자 자동 프로필 생성</title>
+      <requirements>
+        <req>Google 로그인 후 profiles 테이블에 자동 레코드 생성</req>
+        <req>Supabase trigger 설정 (auth.users → public.profiles)</req>
+        <req>프로필 필드: id (user_id), email, google_id, created_at</req>
+      </requirements>
+    </criterion>
+    <criterion id="AC4">
+      <title>기존 사용자 로그인 처리</title>
+      <requirements>
+        <req>이미 profiles 레코드가 있는 경우 유지</req>
+        <req>중복 프로필 생성 방지</req>
+      </requirements>
+    </criterion>
+    <criterion id="AC5">
+      <title>리다이렉트 및 에러 처리</title>
+      <requirements>
+        <req>로그인 성공 시 /dashboard로 자동 리다이렉트</req>
+        <req>로그인 실패 시 명확한 오류 메시지</req>
+        <req>"연결 거부" 등의 사용자 취소 처리</req>
+      </requirements>
+    </criterion>
+    <criterion id="AC6">
+      <title>세션 관리</title>
+      <requirements>
+        <req>JWT 토큰 자동 저장</req>
+        <req>Zustand authStore 업데이트</req>
+        <req>토큰 만료 시 자동 갱신</req>
+      </requirements>
+    </criterion>
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>ContentFlow AI - Product Requirements Document</title>
+        <section>Executive Summary, Success Criteria</section>
+        <snippet>ContentFlow AI는 소상공인과 중소기업이 내실있고 자연스러운 콘텐츠를 자동으로 생성하여 블로그와 SNS에 배포할 수 있도록 돕는 올인원 마케팅 자동화 플랫폼입니다.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>ContentFlow AI - Technical Architecture Document</title>
+        <section>Frontend Stack, Supabase Platform, Auth Integration</section>
+        <snippet>**UX/UI 디자인 시스템:** Shadcn/ui (Radix UI 기반), Tailwind CSS, 디자인 시스템: Shadcn/ui로 일관성 있는 UI 제공. OAuth 구현 시 Supabase Auth를 기반으로 함.</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-2.md</path>
+        <title>Epic 2 Technical Specification - User Authentication</title>
+        <section>Story 2.2 Requirements, OAuth Integration, Database Design</section>
+        <snippet>Story 2.2: Google OAuth 통합으로 소셜 로그인 구현. Supabase Auth의 기본 Google Provider 사용 또는 Google Cloud Console 자격증명 활용.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>ContentFlow AI - Epic & Story Breakdown</title>
+        <section>Epic 2: User Authentication, Story 2.2 Overview</section>
+        <snippet>Epic 2는 사용자 인증 및 계정 관리를 담당하며, 이메일/비밀번호 로그인(Story 2.1)과 Google 소셜 로그인(Story 2.2)을 포함.</snippet>
+      </doc>
+    </docs>
+
+    <code>
+      <artifact>
+        <path>apps/web/src/lib/api/auth-api.ts</path>
+        <kind>service</kind>
+        <symbol>signup, signIn, signOut, getSession, getCurrentUser</symbol>
+        <reason>기존 인증 API 레이어. Story 2.2는 여기에 signInWithGoogle() 함수를 추가해야 함.</reason>
+      </artifact>
+      <artifact>
+        <path>apps/web/src/stores/authStore.ts</path>
+        <kind>state-management</kind>
+        <symbol>useAuthStore</symbol>
+        <reason>Zustand를 사용한 인증 상태 관리. Google 로그인 후 user 상태 업데이트</reason>
+      </artifact>
+      <artifact>
+        <path>apps/web/src/lib/supabase/client.ts</path>
+        <kind>client</kind>
+        <symbol>createClient</symbol>
+        <reason>Supabase 클라이언트 초기화. signInWithOAuth() 메서드를 통해 OAuth 플로우 실행</reason>
+      </artifact>
+      <artifact>
+        <path>apps/web/src/components/auth/SignUpForm.tsx</path>
+        <kind>component</kind>
+        <symbol>SignUpForm</symbol>
+        <reason>회원가입 폼 컴포넌트. OAuthButtons를 임포트하여 통합해야 함.</reason>
+      </artifact>
+      <artifact>
+        <path>apps/web/src/components/auth/PasswordStrengthMeter.tsx</path>
+        <kind>component</kind>
+        <symbol>PasswordStrengthMeter</symbol>
+        <reason>기존 비밀번호 강도 표시기. Story 2.2 구현 시 UI 일관성 참고용</reason>
+      </artifact>
+      <artifact>
+        <path>apps/web/src/lib/schemas/auth.schema.ts</path>
+        <kind>schema</kind>
+        <symbol>signUpSchema, SignUpFormData</symbol>
+        <reason>Zod 검증 스키마. Story 2.2는 OAuth 플로우이므로 스키마 수정 불필요</reason>
+      </artifact>
+    </code>
+
+    <dependencies>
+      <dep ecosystem="node" name="@supabase/supabase-js" version="^2.81.1" reason="Supabase Auth OAuth 메서드 사용 (signInWithOAuth)"/>
+      <dep ecosystem="node" name="next" version="15.0.3" reason="Next.js 라우팅 및 SSR 지원"/>
+      <dep ecosystem="node" name="zustand" version="^5.0.8" reason="authStore 상태 관리"/>
+      <dep ecosystem="node" name="react" version="^19.0.0" reason="UI 컴포넌트 개발"/>
+      <dep ecosystem="node" name="typescript" version="^5.6.0" reason="타입 안전성"/>
+      <dev-dep name="@types/node" version="^22.0.0" reason="Node.js 타입 정의"/>
+      <dev-dep name="@types/react" version="^19.0.0" reason="React 타입 정의"/>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>
+      <area>OAuth 설정</area>
+      <rule>로컬 개발: Supabase 기본 테스트 제공자 사용 (SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID 불필요)</rule>
+      <rule>프로덕션: Google Cloud Console에서 OAuth 2.0 자격증명 생성 필수</rule>
+      <rationale>로컬/프로덕션 환경의 OAuth 설정 차이를 명확히 함</rationale>
+    </constraint>
+    <constraint>
+      <area>UI/UX 일관성</area>
+      <rule>Shadcn/ui 컴포넌트 사용 (Story 2.1과 동일)</rule>
+      <rule>버튼 스타일: Story 2.1의 SignUpForm과 일치하는 디자인</rule>
+      <rationale>일관된 사용자 경험 제공</rationale>
+    </constraint>
+    <constraint>
+      <area>에러 메시지</area>
+      <rule>모든 에러 메시지는 한글화되어야 함</rule>
+      <rule>"사용자가 요청 취소" → "Google 로그인이 취소되었습니다"</rule>
+      <rule>"popup_blocked" → "팝업이 차단되었습니다. 팝업 허용 후 다시 시도하세요"</rule>
+      <rationale>사용자 친화적인 피드백</rationale>
+    </constraint>
+    <constraint>
+      <area>데이터베이스</area>
+      <rule>PostgreSQL trigger로 auth.users → public.profiles 자동 동기화</rule>
+      <rule>ON CONFLICT 사용으로 중복 프로필 생성 방지</rule>
+      <rationale>데이터 일관성 및 자동화</rationale>
+    </constraint>
+    <constraint>
+      <area>세션 관리</area>
+      <rule>JWT 토큰은 localStorage (SSR 고려) 또는 httpOnly cookie (보안)</rule>
+      <rule>Zustand authStore에 user 상태 저장</rule>
+      <rationale>토큰 만료 시 자동 갱신 메커니즘 지원</rationale>
+    </constraint>
+  </constraints>
+
+  <interfaces>
+    <interface>
+      <name>signInWithGoogle()</name>
+      <kind>function-signature</kind>
+      <signature>async function signInWithGoogle(): Promise&lt;{ user: User | null; error: AuthError | null }&gt;</signature>
+      <path>apps/web/src/lib/api/auth-api.ts</path>
+      <description>Google OAuth 플로우를 트리거하고 사용자 정보와 에러를 반환</description>
+    </interface>
+    <interface>
+      <name>useAuthStore()</name>
+      <kind>zustand-hook</kind>
+      <signature>const { user, isAuthenticated, setUser } = useAuthStore()</signature>
+      <path>apps/web/src/stores/authStore.ts</path>
+      <description>인증 상태 관리. Google 로그인 후 user와 isAuthenticated 업데이트</description>
+    </interface>
+    <interface>
+      <name>OAuthButtons Component</name>
+      <kind>react-component</kind>
+      <signature>&lt;OAuthButtons onSuccess={handleSuccess} onError={handleError} /&gt;</signature>
+      <path>apps/web/src/components/auth/OAuthButtons.tsx (NEW)</path>
+      <description>Google 로그인 버튼 컴포넌트. onClick 시 signInWithGoogle() 호출</description>
+    </interface>
+    <interface>
+      <name>Database Trigger</name>
+      <kind>postgresql-trigger</kind>
+      <signature>CREATE TRIGGER create_user_profile AFTER INSERT ON auth.users FOR EACH ROW EXECUTE FUNCTION public.handle_new_user()</signature>
+      <path>supabase/migrations/[timestamp]_add_oauth_profile_trigger.sql (NEW)</path>
+      <description>신규 Google OAuth 사용자 생성 시 public.profiles에 자동 삽입</description>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>
+      테스트 프레임워크: Vitest (스냅샷, 목킹 지원). Unit 테스트는 lib/schemas, lib/api에 위치. 컴포넌트 테스트는 @testing-library/react 활용. E2E 테스트는 Playwright 사용. 모든 테스트는 apps/web/src/__tests__/ 디렉토리에 위치하며, 파일명은 [subject].test.ts 또는 [subject].test.tsx 패턴을 따름.
+    </standards>
+
+    <locations>
+      <location>apps/web/src/__tests__/*.test.ts</location>
+      <location>apps/web/src/__tests__/*.test.tsx</location>
+    </locations>
+
+    <ideas>
+      <idea ac="AC1">Google OAuth 로그인 버튼 렌더링 테스트 - OAuthButtons 컴포넌트가 올바르게 표시되는지 확인</idea>
+      <idea ac="AC2">SignUpForm에 OAuthButtons 통합 테스트 - 회원가입 페이지에서 Google 버튼이 표시되는지 확인</idea>
+      <idea ac="AC3">신규 사용자 프로필 자동 생성 테스트 - Google 로그인 후 profiles 테이블에 레코드 생성 확인</idea>
+      <idea ac="AC4">기존 사용자 로그인 테스트 - 중복 프로필 생성 방지 확인 (ON CONFLICT)</idea>
+      <idea ac="AC5">리다이렉트 및 에러 처리 테스트 - 성공 시 /dashboard 리다이렉트, 실패 시 에러 메시지 표시</idea>
+      <idea ac="AC6">세션 관리 테스트 - JWT 토큰 저장 및 authStore 업데이트 확인</idea>
+      <idea ac="AC1,AC2">E2E 테스트 - 전체 Google OAuth 플로우 (로그인 → 가입 → 대시보드 리다이렉트)</idea>
+      <idea general="true">OAuth 에러 메시지 번역 테스트 - 모든 에러 시나리오의 한글 메시지 정확성 검증</idea>
+    </ideas>
+  </tests>
+</story-context>

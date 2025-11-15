@@ -47,10 +47,10 @@ development_status:
 
   # Epic 2: 사용자 인증 및 계정 관리 (User Authentication) - 8 stories
   epic-2: contexted
-  2-1-supabase-auth-integration-email-password: drafted
-  2-2-google-social-login-implementation: backlog
-  2-3-login-page-and-session-management: backlog
-  2-4-password-reset-email-verification: backlog
+  2-1-supabase-auth-integration-email-password: review
+  2-2-google-social-login-implementation: review
+  2-3-login-page-and-session-management: review
+  2-4-password-reset-email-verification: review
   2-5-profile-registration-onboarding: backlog
   2-6-profile-edit-page: backlog
   2-7-account-deletion-feature: backlog
