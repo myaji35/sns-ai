@@ -128,6 +128,12 @@ export default function DashboardPage() {
               </div>
             </div>
             <button
+              onClick={() => router.push('/management')}
+              className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-lg transition shadow-md"
+            >
+              회원사 관리
+            </button>
+            <button
               onClick={() => router.push('/organization')}
               className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition"
             >
