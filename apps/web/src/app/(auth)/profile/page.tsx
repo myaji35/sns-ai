@@ -98,7 +98,7 @@ export default function ProfilePage() {
             프로필 설정을 완료해주세요.
           </p>
           <button
-            onClick={() => router.push('/profile-onboarding')}
+            onClick={() => router.push('/onboarding')}
             className="w-full px-6 py-3 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
           >
             프로필 설정하기

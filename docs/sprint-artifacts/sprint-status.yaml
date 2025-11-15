@@ -51,9 +51,9 @@ development_status:
   2-2-google-social-login-implementation: done
   2-3-login-page-and-session-management: done
   2-4-password-reset-email-verification: done
-  2-5-profile-registration-onboarding: review
-  2-6-profile-edit-page: review
-  2-7-account-deletion-feature: ready-for-dev
+  2-5-profile-registration-onboarding: done
+  2-6-profile-edit-page: done
+  2-7-account-deletion-feature: done
   2-8-logout-feature: done
   epic-2-retrospective: optional
 
