@@ -9,7 +9,10 @@ import { createClient } from '@/lib/supabase/client';
 
 const profileSchema = z.object({
   fullName: z.string().max(50, '최대 50자까지 입력 가능합니다').optional(),
-  companyName: z.string().min(1, '브랜드/회사명을 입력해주세요').max(50, '최대 50자까지 입력 가능합니다'),
+  companyName: z
+    .string()
+    .min(1, '브랜드/회사명을 입력해주세요')
+    .max(50, '최대 50자까지 입력 가능합니다'),
   industry: z.string().min(1, '업종을 선택해주세요'),
   brandDescription: z.string().max(200, '최대 200자까지 입력 가능합니다').optional(),
   toneAndManner: z.array(z.string()).optional(),
@@ -69,7 +72,9 @@ export default function ProfilePage() {
   useEffect(() => {
     const loadProfile = async () => {
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
       if (!user) {
         router.push('/login');
@@ -93,9 +98,10 @@ export default function ProfilePage() {
         // Parse tone_and_manner if it's stored as JSON
         if (profile.tone_and_manner) {
           try {
-            const tones = typeof profile.tone_and_manner === 'string'
-              ? JSON.parse(profile.tone_and_manner)
-              : profile.tone_and_manner;
+            const tones =
+              typeof profile.tone_and_manner === 'string'
+                ? JSON.parse(profile.tone_and_manner)
+                : profile.tone_and_manner;
             setSelectedTones(Array.isArray(tones) ? tones : []);
           } catch {
             setSelectedTones([]);
@@ -110,8 +116,8 @@ export default function ProfilePage() {
   }, [router, setValue]);
 
   const toggleTone = (tone: string) => {
-    setSelectedTones((prev) =>
-      prev.includes(tone) ? prev.filter((t) => t !== tone) : [...prev, tone]
+    setSelectedTones(prev =>
+      prev.includes(tone) ? prev.filter(t => t !== tone) : [...prev, tone]
     );
   };
 
@@ -279,7 +285,7 @@ export default function ProfilePage() {
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
               >
                 <option value="">업종을 선택하세요</option>
-                {INDUSTRIES.map((industry) => (
+                {INDUSTRIES.map(industry => (
                   <option key={industry} value={industry}>
                     {industry}
                   </option>
@@ -292,7 +298,10 @@ export default function ProfilePage() {
 
             {/* Brand Description */}
             <div>
-              <label htmlFor="brandDescription" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="brandDescription"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 브랜드 설명 (선택)
               </label>
               <textarea
@@ -302,9 +311,7 @@ export default function ProfilePage() {
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
                 placeholder="브랜드의 특징, 가치, 목표 고객 등을 간단히 설명해주세요"
               />
-              <p className="mt-1 text-sm text-gray-500">
-                {brandDescription?.length || 0}/200
-              </p>
+              <p className="mt-1 text-sm text-gray-500">{brandDescription?.length || 0}/200</p>
               {errors.brandDescription && (
                 <p className="mt-1 text-sm text-red-600">{errors.brandDescription.message}</p>
               )}
@@ -316,7 +323,7 @@ export default function ProfilePage() {
                 톤앤매너 (선택)
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {TONES.map((tone) => (
+                {TONES.map(tone => (
                   <button
                     key={tone.value}
                     type="button"

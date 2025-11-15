@@ -1,0 +1,1329 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ContentFlow AI - 디자인 방향 목업</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          'Pretendard',
+          -apple-system,
+          BlinkMacSystemFont,
+          system-ui,
+          Roboto,
+          sans-serif;
+        background: #f1f5f9;
+        color: #1e293b;
+      }
+
+      .controls {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: white;
+        padding: 1rem 2rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .controls h1 {
+        font-size: 1.25rem;
+        color: #0f172a;
+      }
+
+      .nav-buttons {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .nav-btn {
+        padding: 0.5rem 1rem;
+        background: #0ea5e9;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: background 0.2s;
+      }
+
+      .nav-btn:hover {
+        background: #0284c7;
+      }
+
+      .nav-btn:disabled {
+        background: #cbd5e1;
+        cursor: not-allowed;
+      }
+
+      .mockup-container {
+        margin-top: 80px;
+        padding: 2rem;
+        display: none;
+      }
+
+      .mockup-container.active {
+        display: block;
+      }
+
+      .mockup-header {
+        max-width: 1400px;
+        margin: 0 auto 2rem;
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .mockup-header h2 {
+        font-size: 1.75rem;
+        margin-bottom: 0.5rem;
+        color: #0ea5e9;
+      }
+
+      .mockup-header .personality {
+        color: #64748b;
+        margin-bottom: 1rem;
+      }
+
+      .mockup-header .characteristics {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .char-item {
+        font-size: 0.9rem;
+      }
+
+      .char-label {
+        font-weight: 600;
+        color: #334155;
+      }
+
+      .char-value {
+        color: #64748b;
+      }
+
+      .dashboard {
+        max-width: 1400px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+
+      /* Direction 1: Dense Dashboard */
+      .dense-dashboard .header {
+        background: #0ea5e9;
+        color: white;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .dense-dashboard .header h1 {
+        font-size: 1.5rem;
+      }
+
+      .dense-dashboard .header-actions {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+      }
+
+      .dense-dashboard .user-menu {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      .dense-dashboard .main-content {
+        display: grid;
+        grid-template-columns: 250px 1fr;
+      }
+
+      .dense-dashboard .sidebar {
+        background: #f8fafc;
+        padding: 1.5rem 1rem;
+        border-right: 1px solid #e2e8f0;
+      }
+
+      .dense-dashboard .nav-item {
+        padding: 0.75rem 1rem;
+        margin-bottom: 0.5rem;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .dense-dashboard .nav-item:hover {
+        background: #e0f2fe;
+      }
+
+      .dense-dashboard .nav-item.active {
+        background: #0ea5e9;
+        color: white;
+      }
+
+      .dense-dashboard .content-area {
+        padding: 2rem;
+      }
+
+      .dense-dashboard .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .dense-dashboard .stat-card {
+        background: #f8fafc;
+        padding: 1rem;
+        border-radius: 8px;
+        border-left: 4px solid #0ea5e9;
+      }
+
+      .dense-dashboard .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #0ea5e9;
+      }
+
+      .dense-dashboard .stat-label {
+        font-size: 0.85rem;
+        color: #64748b;
+        margin-top: 0.25rem;
+      }
+
+      .dense-dashboard .review-queue {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .dense-dashboard .review-header {
+        background: #f8fafc;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+        font-weight: 600;
+      }
+
+      .dense-dashboard .review-item {
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .dense-dashboard .review-item:last-child {
+        border-bottom: none;
+      }
+
+      .dense-dashboard .review-info h3 {
+        font-size: 1rem;
+        margin-bottom: 0.25rem;
+      }
+
+      .dense-dashboard .review-meta {
+        font-size: 0.85rem;
+        color: #64748b;
+      }
+
+      .dense-dashboard .review-btn {
+        background: #0ea5e9;
+        color: white;
+        padding: 0.5rem 1.25rem;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 500;
+      }
+
+      /* Direction 2: Spacious Explorer */
+      .spacious-dashboard {
+        max-width: 1200px;
+      }
+
+      .spacious-dashboard .header {
+        background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+        color: white;
+        padding: 3rem 3rem 2rem;
+      }
+
+      .spacious-dashboard .header h1 {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .spacious-dashboard .header p {
+        opacity: 0.9;
+      }
+
+      .spacious-dashboard .nav-tabs {
+        display: flex;
+        gap: 2rem;
+        padding: 0 3rem;
+        background: white;
+        border-bottom: 2px solid #e2e8f0;
+      }
+
+      .spacious-dashboard .tab {
+        padding: 1rem 0;
+        cursor: pointer;
+        border-bottom: 3px solid transparent;
+        margin-bottom: -2px;
+        transition: all 0.2s;
+      }
+
+      .spacious-dashboard .tab.active {
+        border-bottom-color: #0ea5e9;
+        color: #0ea5e9;
+        font-weight: 600;
+      }
+
+      .spacious-dashboard .content-area {
+        padding: 3rem;
+      }
+
+      .spacious-dashboard .hero-section {
+        background: linear-gradient(135deg, #e0f2fe 0%, #f0fdfa 100%);
+        padding: 3rem;
+        border-radius: 12px;
+        margin-bottom: 3rem;
+        text-align: center;
+      }
+
+      .spacious-dashboard .hero-section h2 {
+        font-size: 1.75rem;
+        margin-bottom: 1rem;
+        color: #0f172a;
+      }
+
+      .spacious-dashboard .hero-section p {
+        color: #64748b;
+        margin-bottom: 2rem;
+        font-size: 1.1rem;
+      }
+
+      .spacious-dashboard .cta-button {
+        background: #0ea5e9;
+        color: white;
+        padding: 1rem 2.5rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        font-weight: 600;
+        box-shadow: 0 4px 6px rgba(14, 165, 233, 0.3);
+      }
+
+      .spacious-dashboard .content-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 2rem;
+      }
+
+      .spacious-dashboard .content-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 2rem;
+        transition: all 0.3s;
+      }
+
+      .spacious-dashboard .content-card:hover {
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        transform: translateY(-4px);
+      }
+
+      /* Direction 3: Card Gallery */
+      .card-gallery {
+        background: #f8fafc;
+        padding: 2rem;
+      }
+
+      .card-gallery .top-bar {
+        background: white;
+        padding: 1.5rem 2rem;
+        border-radius: 12px 12px 0 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .card-gallery .top-bar h1 {
+        font-size: 1.5rem;
+      }
+
+      .card-gallery .quick-actions {
+        display: flex;
+        gap: 0.75rem;
+      }
+
+      .card-gallery .quick-btn {
+        background: #e0f2fe;
+        color: #0369a1;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.2s;
+      }
+
+      .card-gallery .quick-btn.primary {
+        background: #0ea5e9;
+        color: white;
+      }
+
+      .card-gallery .content-area {
+        background: white;
+        padding: 2rem;
+        border-radius: 0 0 12px 12px;
+      }
+
+      .card-gallery .cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .card-gallery .content-card {
+        background: white;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.2s;
+      }
+
+      .card-gallery .content-card:hover {
+        border-color: #0ea5e9;
+        box-shadow: 0 4px 12px rgba(14, 165, 233, 0.2);
+      }
+
+      .card-gallery .card-image {
+        background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
+        height: 140px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+      }
+
+      .card-gallery .card-body {
+        padding: 1.25rem;
+      }
+
+      .card-gallery .card-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+
+      .card-gallery .card-meta {
+        font-size: 0.85rem;
+        color: #64748b;
+        margin-bottom: 1rem;
+      }
+
+      .card-gallery .card-status {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        background: #fef3c7;
+        color: #92400e;
+      }
+
+      /* Direction 4: Minimalist Clean */
+      .minimalist {
+        max-width: 1000px;
+        background: transparent;
+        box-shadow: none;
+      }
+
+      .minimalist .header {
+        background: transparent;
+        padding: 3rem 0 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .minimalist .header h1 {
+        font-size: 2.5rem;
+        color: #0f172a;
+        font-weight: 300;
+      }
+
+      .minimalist .header-right {
+        display: flex;
+        gap: 1.5rem;
+        align-items: center;
+      }
+
+      .minimalist .icon-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 1px solid #e2e8f0;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+
+      .minimalist .content-list {
+        background: transparent;
+      }
+
+      .minimalist .list-item {
+        background: white;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.2s;
+      }
+
+      .minimalist .list-item:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      }
+
+      .minimalist .list-title {
+        font-size: 1.25rem;
+        font-weight: 400;
+        margin-bottom: 0.5rem;
+      }
+
+      .minimalist .list-meta {
+        color: #94a3b8;
+        font-size: 0.9rem;
+      }
+
+      .minimalist .list-action {
+        color: #0ea5e9;
+        text-decoration: none;
+        font-weight: 500;
+        padding: 0.75rem 1.5rem;
+        border: 1px solid #0ea5e9;
+        border-radius: 6px;
+        transition: all 0.2s;
+      }
+
+      .minimalist .list-action:hover {
+        background: #0ea5e9;
+        color: white;
+      }
+
+      /* Direction 5: Dashboard Pro */
+      .dashboard-pro {
+        background: #0f172a;
+        color: white;
+      }
+
+      .dashboard-pro .header {
+        background: #1e293b;
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid #334155;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .dashboard-pro .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #0ea5e9;
+      }
+
+      .dashboard-pro .header-search {
+        background: #334155;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        color: white;
+        width: 300px;
+      }
+
+      .dashboard-pro .main-grid {
+        display: grid;
+        grid-template-columns: 280px 1fr 320px;
+        min-height: calc(100vh - 200px);
+      }
+
+      .dashboard-pro .left-sidebar {
+        background: #1e293b;
+        padding: 2rem 1rem;
+        border-right: 1px solid #334155;
+      }
+
+      .dashboard-pro .nav-item {
+        color: #94a3b8;
+        padding: 0.875rem 1rem;
+        margin-bottom: 0.5rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .dashboard-pro .nav-item:hover {
+        background: #334155;
+        color: white;
+      }
+
+      .dashboard-pro .nav-item.active {
+        background: #0ea5e9;
+        color: white;
+      }
+
+      .dashboard-pro .center-content {
+        padding: 2rem;
+      }
+
+      .dashboard-pro .metrics {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .dashboard-pro .metric-card {
+        background: #1e293b;
+        padding: 1.5rem;
+        border-radius: 12px;
+        border: 1px solid #334155;
+      }
+
+      .dashboard-pro .metric-value {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #0ea5e9;
+      }
+
+      .dashboard-pro .metric-label {
+        color: #94a3b8;
+        margin-top: 0.5rem;
+      }
+
+      .dashboard-pro .activity-feed {
+        background: #1e293b;
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 1px solid #334155;
+      }
+
+      .dashboard-pro .activity-item {
+        padding: 1rem 0;
+        border-bottom: 1px solid #334155;
+      }
+
+      .dashboard-pro .activity-item:last-child {
+        border-bottom: none;
+      }
+
+      .dashboard-pro .right-sidebar {
+        background: #1e293b;
+        padding: 2rem 1rem;
+        border-left: 1px solid #334155;
+      }
+
+      /* Direction 6: Content First */
+      .content-first {
+        max-width: 900px;
+      }
+
+      .content-first .header {
+        padding: 2rem;
+        border-bottom: 1px solid #e2e8f0;
+      }
+
+      .content-first .header h1 {
+        font-size: 1.75rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .content-first .header-nav {
+        display: flex;
+        gap: 2rem;
+        margin-top: 1.5rem;
+      }
+
+      .content-first .header-nav a {
+        color: #64748b;
+        text-decoration: none;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid transparent;
+        transition: all 0.2s;
+      }
+
+      .content-first .header-nav a.active {
+        color: #0ea5e9;
+        border-bottom-color: #0ea5e9;
+      }
+
+      .content-first .editor-area {
+        padding: 3rem 2rem;
+      }
+
+      .content-first .editor-container {
+        background: #fafafa;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 2rem;
+        min-height: 400px;
+      }
+
+      .content-first .editor-title {
+        font-size: 2rem;
+        border: none;
+        background: transparent;
+        width: 100%;
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+        color: #0f172a;
+      }
+
+      .content-first .editor-body {
+        border: none;
+        background: transparent;
+        width: 100%;
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #334155;
+        resize: none;
+        min-height: 300px;
+      }
+
+      .content-first .editor-toolbar {
+        display: flex;
+        gap: 1rem;
+        padding: 1.5rem 2rem;
+        border-top: 1px solid #e2e8f0;
+        justify-content: space-between;
+      }
+
+      .content-first .toolbar-left {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .content-first .toolbar-btn {
+        padding: 0.75rem 1.25rem;
+        border: 1px solid #e2e8f0;
+        background: white;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .content-first .toolbar-btn.primary {
+        background: #0ea5e9;
+        color: white;
+        border-color: #0ea5e9;
+      }
+
+      .indicator {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        background: white;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        font-weight: 600;
+        color: #0ea5e9;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="controls">
+      <h1>ContentFlow AI - 디자인 방향 탐색 (6가지)</h1>
+      <div class="nav-buttons">
+        <button class="nav-btn" id="prevBtn" disabled>← 이전</button>
+        <span id="counter" style="padding: 0 1rem; color: #64748b">1 / 6</span>
+        <button class="nav-btn" id="nextBtn">다음 →</button>
+      </div>
+    </div>
+
+    <div class="indicator" id="indicator">Direction 1: Dense Dashboard</div>
+
+    <!-- Direction 1: Dense Dashboard -->
+    <div class="mockup-container active" data-direction="1">
+      <div class="mockup-header">
+        <h2>Direction 1: Dense Dashboard</h2>
+        <p class="personality">전문적이고 효율적인 - 많은 정보를 한눈에</p>
+        <div class="characteristics">
+          <div class="char-item">
+            <div class="char-label">레이아웃:</div>
+            <div class="char-value">사이드바 네비게이션</div>
+          </div>
+          <div class="char-item">
+            <div class="char-label">밀도:</div>
+            <div class="char-value">높음 (정보 집약적)</div>
+          </div>
+          <div class="char-item">
+            <div class="char-label">최적:</div>
+            <div class="char-value">파워 유저, 빠른 작업</div>
+          </div>
+          <div class="char-item">
+            <div class="char-label">느낌:</div>
+            <div class="char-value">스마트스토어, 배민사장님</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard dense-dashboard">
+        <div class="header">
+          <h1>ContentFlow AI</h1>
+          <div class="header-actions">
+            <div style="color: rgba(255, 255, 255, 0.9)">🔔 3</div>
+            <div class="user-menu">사장님 ▾</div>
+          </div>
+        </div>
+        <div class="main-content">
+          <div class="sidebar">
+            <div class="nav-item active">📊 대시보드</div>
+            <div class="nav-item">📝 콘텐츠 생성</div>
+            <div class="nav-item">✅ 검토 대기</div>
+            <div class="nav-item">📅 캘린더</div>
+            <div class="nav-item">📈 분석</div>
+            <div class="nav-item">⚙️ 설정</div>
+          </div>
+          <div class="content-area">
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-value">12</div>
+                <div class="stat-label">이번 주 생성</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value">3</div>
+                <div class="stat-label">검토 대기</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value">9</div>
+                <div class="stat-label">배포 완료</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value">85%</div>
+                <div class="stat-label">승인율</div>
+              </div>
+            </div>
+
+            <div class="review-queue">
+              <div class="review-header">🔔 검토 대기 중 (3개)</div>
+              <div class="review-item">
+                <div class="review-info">
+                  <h3>여름 신메뉴 소개</h3>
+                  <div class="review-meta">AI 생성 완료 • 5분 전 • Claude 3.5</div>
+                </div>
+                <button class="review-btn">검토하기</button>
+              </div>
+              <div class="review-item">
+                <div class="review-info">
+                  <h3>고객 후기 이벤트 안내</h3>
+                  <div class="review-meta">AI 생성 완료 • 1시간 전 • GPT-4</div>
+                </div>
+                <button class="review-btn">검토하기</button>
+              </div>
+              <div class="review-item">
+                <div class="review-info">
+                  <h3>매장 리뉴얼 소식</h3>
+                  <div class="review-meta">AI 생성 완료 • 2시간 전 • Gemini 2.0</div>
+                </div>
+                <button class="review-btn">검토하기</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Direction 2: Spacious Explorer -->
+    <div class="mockup-container" data-direction="2">
+      <div class="mockup-header">
+        <h2>Direction 2: Spacious Explorer</h2>
+        <p class="personality">밝고 여유로운 - 처음 사용자에게 친근함</p>
+        <div class="characteristics">
+          <div class="char-item">
+            <div class="char-label">레이아웃:</div>
+            <div class="char-value">상단 탭 네비게이션</div>
+          </div>
+          <div class="char-item">
+            <div class="char-label">밀도:</div>
+            <div class="char-value">낮음 (여백 많음)</div>
+          </div>
+          <div class="char-item">
+            <div class="char-label">최적:</div>
+            <div class="char-value">초보 사용자, 탐색 중심</div>
+          </div>
+          <div class="char-item">
+            <div class="char-label">느낌:</div>
+            <div class="char-value">Canva, Notion</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard spacious-dashboard">
+        <div class="header">
+          <h1>ContentFlow AI</h1>
+          <p>내실있고 자연스러운 콘텐츠, AI가 만들어드립니다</p>
+        </div>
+        <div class="nav-tabs">
+          <div class="tab active">대시보드</div>
+          <div class="tab">콘텐츠</div>
+          <div class="tab">캘린더</div>
+          <div class="tab">분석</div>
+        </div>
+        <div class="content-area">
+          <div class="hero-section">
+            <h2>새 콘텐츠를 생성해보세요</h2>
+            <p>주제만 입력하면 AI가 최고 품질의 콘텐츠를 만들어드립니다</p>
+            <button class="cta-button">✨ 새 콘텐츠 만들기</button>
+          </div>
+
+          <h3 style="margin-bottom: 1.5rem; font-size: 1.25rem">최근 콘텐츠</h3>
+          <div class="content-grid">
+            <div class="content-card">
+              <div style="color: #f59e0b; font-size: 2rem; margin-bottom: 1rem">⏳</div>
+              <h3 style="margin-bottom: 0.5rem">여름 신메뉴 소개</h3>
+              <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 1rem">검토 대기 중</p>
+              <p style="color: #94a3b8; font-size: 0.85rem">5분 전 생성됨</p>
+            </div>
+            <div class="content-card">
+              <div style="color: #10b981; font-size: 2rem; margin-bottom: 1rem">✓</div>
+              <h3 style="margin-bottom: 0.5rem">고객 후기 이벤트</h3>
+              <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 1rem">배포 완료</p>
+              <p style="color: #94a3b8; font-size: 0.85rem">어제 게시됨</p>
+            </div>
+            <div class="content-card">
+              <div style="color: #10b981; font-size: 2rem; margin-bottom: 1rem">✓</div>
+              <h3 style="margin-bottom: 0.5rem">매장 리뉴얼 소식</h3>
+              <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 1rem">배포 완료</p>
+              <p style="color: #94a3b8; font-size: 0.85rem">3일 전 게시됨</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Direction 3: Card Gallery -->
+    <div class="mockup-container" data-direction="3">
+      <div class="mockup-header">
+        <h2>Direction 3: Card Gallery</h2>
+        <p class="personality">시각적이고 직관적 - 카드 중심 레이아웃</p>
+        <div class="characteristics">
+          <div class="char-item">
+            <div class="char-label">레이아웃:</div>
+            <div class="char-value">그리드 카드</div>
+          </div>
+          <div class="char-item">
+            <div class="char-label">밀도:</div>
+            <div class="char-value">중간</div>
+          </div>
+          <div class="char-item">
+            <div class="char-label">최적:</div>
+            <div class="char-value">콘텐츠 탐색, 빠른 스캔</div>
+          </div>
+          <div class="char-item">
+            <div class="char-label">느낌:</div>
+            <div class="char-value">Trello, Pinterest</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard card-gallery">
+        <div class="top-bar">
+          <h1>내 콘텐츠</h1>
+          <div class="quick-actions">
+            <button class="quick-btn">필터</button>
+            <button class="quick-btn">정렬</button>
+            <button class="quick-btn primary">+ 새 콘텐츠</button>
+          </div>
+        </div>
+        <div class="content-area">
+          <div class="cards-grid">
+            <div class="content-card">
+              <div class="card-image">📝</div>
+              <div class="card-body">
+                <div class="card-title">여름 신메뉴 소개</div>
+                <div class="card-meta">5분 전 • Claude 3.5</div>
+                <div class="card-status">검토 대기</div>
+              </div>
+            </div>
+            <div class="content-card">
+              <div class="card-image">🎉</div>
+              <div class="card-body">
+                <div class="card-title">고객 후기 이벤트 안내</div>
+                <div class="card-meta">1시간 전 • GPT-4</div>
+                <div class="card-status">검토 대기</div>
+              </div>
+            </div>
+            <div class="content-card">
+              <div class="card-image">✨</div>
+              <div class="card-body">
+                <div class="card-title">매장 리뉴얼 소식</div>
+                <div class="card-meta">2시간 전 • Gemini 2.0</div>
+                <div class="card-status">검토 대기</div>
+              </div>
+            </div>
+            <div class="content-card">
+              <div
+                class="card-image"
+                style="background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)"
+              >
+                ✓
+              </div>
+              <div class="card-body">
+                <div class="card-title">신제품 출시 소식</div>
+                <div class="card-meta">어제 • GPT-4</div>
+                <div class="card-status" style="background: #d1fae5; color: #065f46">배포 완료</div>
+              </div>
+            </div>
+            <div class="content-card">
+              <div
+                class="card-image"
+                style="background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)"
+              >
+                ✓
+              </div>
+              <div class="card-body">
+                <div class="card-title">주말 이벤트 안내</div>
+                <div class="card-meta">3일 전 • Claude 3.5</div>
+                <div class="card-status" style="background: #d1fae5; color: #065f46">배포 완료</div>
+              </div>
+            </div>
+            <div class="content-card">
+              <div
+                class="card-image"
+                style="background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)"
+              >
+                ✓
+              </div>
+              <div class="card-body">
+                <div class="card-title">고객 감사 인사</div>
+                <div class="card-meta">1주 전 • Gemini 2.0</div>
+                <div class="card-status" style="background: #d1fae5; color: #065f46">배포 완료</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Direction 4: Minimalist Clean -->
+    <div class="mockup-container" data-direction="4">
+      <div class="mockup-header">
+        <h2>Direction 4: Minimalist Clean</h2>
+        <p class="personality">미니멀하고 세련된 - 콘텐츠에 집중</p>
+        <div class="characteristics">
+          <div class="char-item">
+            <div class="char-label">레이아웃:</div>
+            <div class="char-value">중앙 정렬 리스트</div>
+          </div>
+          <div class="char-item">
+            <div class="char-label">밀도:</div>
+            <div class="char-value">매우 낮음</div>
+          </div>
+          <div class="char-item">
+            <div class="char-label">최적:</div>
+            <div class="char-value">깔끔함 선호, 집중 작업</div>
+          </div>
+          <div class="char-item">
+            <div class="char-label">느낌:</div>
+            <div class="char-value">Apple, Medium</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard minimalist">
+        <div class="header">
+          <h1>ContentFlow</h1>
+          <div class="header-right">
+            <div class="icon-btn">🔍</div>
+            <div class="icon-btn">🔔</div>
+            <div class="icon-btn">👤</div>
+          </div>
+        </div>
+        <div class="content-list">
+          <div class="list-item">
+            <div>
+              <div class="list-title">여름 신메뉴 소개</div>
+              <div class="list-meta">5분 전 생성됨 • Claude 3.5 Sonnet</div>
+            </div>
+            <a href="#" class="list-action">검토하기 →</a>
+          </div>
+          <div class="list-item">
+            <div>
+              <div class="list-title">고객 후기 이벤트 안내</div>
+              <div class="list-meta">1시간 전 생성됨 • GPT-4 Turbo</div>
+            </div>
+            <a href="#" class="list-action">검토하기 →</a>
+          </div>
+          <div class="list-item">
+            <div>
+              <div class="list-title">매장 리뉴얼 소식</div>
+              <div class="list-meta">2시간 전 생성됨 • Gemini 2.0 Flash</div>
+            </div>
+            <a href="#" class="list-action">검토하기 →</a>
+          </div>
+          <div class="list-item" style="opacity: 0.6">
+            <div>
+              <div class="list-title">신제품 출시 소식</div>
+              <div class="list-meta">어제 배포됨 • Instagram, Facebook, 네이버</div>
+            </div>
+            <a href="#" class="list-action" style="opacity: 0.5">완료</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Direction 5: Dashboard Pro -->
+    <div class="mockup-container" data-direction="5">
+      <div class="mockup-header">
+        <h2>Direction 5: Dashboard Pro</h2>
+        <p class="personality">프로페셔널하고 데이터 중심 - 다크 모드</p>
+        <div class="characteristics">
+          <div class="char-item">
+            <div class="char-label">레이아웃:</div>
+            <div class="char-value">3단 레이아웃</div>
+          </div>
+          <div class="char-item">
+            <div class="char-label">밀도:</div>
+            <div class="char-value">매우 높음</div>
+          </div>
+          <div class="char-item">
+            <div class="char-label">최적:</div>
+            <div class="char-value">분석, 모니터링, 파워유저</div>
+          </div>
+          <div class="char-item">
+            <div class="char-label">느낌:</div>
+            <div class="char-value">GitHub, Analytics 대시보드</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard dashboard-pro">
+        <div class="header">
+          <div class="logo">ContentFlow AI</div>
+          <input type="text" class="header-search" placeholder="검색..." />
+          <div style="color: #94a3b8">사장님 ▾</div>
+        </div>
+        <div class="main-grid">
+          <div class="left-sidebar">
+            <div class="nav-item active">📊 대시보드</div>
+            <div class="nav-item">📝 콘텐츠</div>
+            <div class="nav-item">✅ 검토</div>
+            <div class="nav-item">📅 캘린더</div>
+            <div class="nav-item">📈 분석</div>
+            <div class="nav-item">🔗 연동</div>
+            <div class="nav-item">⚙️ 설정</div>
+          </div>
+          <div class="center-content">
+            <h2 style="color: white; margin-bottom: 1.5rem">성과 지표</h2>
+            <div class="metrics">
+              <div class="metric-card">
+                <div class="metric-value">24</div>
+                <div class="metric-label">이번 달 생성</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-value">3</div>
+                <div class="metric-label">검토 대기</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-value">89%</div>
+                <div class="metric-label">승인율</div>
+              </div>
+            </div>
+
+            <h3 style="color: white; margin-bottom: 1rem">최근 활동</h3>
+            <div class="activity-feed">
+              <div class="activity-item">
+                <div style="color: white; font-weight: 500">여름 신메뉴 소개</div>
+                <div style="color: #94a3b8; font-size: 0.85rem; margin-top: 0.25rem">
+                  AI 생성 완료 • 5분 전
+                </div>
+              </div>
+              <div class="activity-item">
+                <div style="color: white; font-weight: 500">고객 후기 이벤트 안내</div>
+                <div style="color: #94a3b8; font-size: 0.85rem; margin-top: 0.25rem">
+                  배포 완료 • 1시간 전
+                </div>
+              </div>
+              <div class="activity-item">
+                <div style="color: white; font-weight: 500">매장 리뉴얼 소식</div>
+                <div style="color: #94a3b8; font-size: 0.85rem; margin-top: 0.25rem">
+                  배포 완료 • 2시간 전
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="right-sidebar">
+            <h3 style="color: white; margin-bottom: 1rem; font-size: 1rem">이번 주 계획</h3>
+            <div style="color: #94a3b8; font-size: 0.9rem; line-height: 2">
+              <div>월 - 신메뉴 홍보</div>
+              <div>화 - 고객 후기</div>
+              <div>수 - 이벤트 안내</div>
+              <div>목 - 매장 소식</div>
+              <div>금 - 주말 프로모션</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Direction 6: Content First -->
+    <div class="mockup-container" data-direction="6">
+      <div class="mockup-header">
+        <h2>Direction 6: Content First</h2>
+        <p class="personality">콘텐츠 편집 중심 - 검토 UI에 최적화</p>
+        <div class="characteristics">
+          <div class="char-item">
+            <div class="char-label">레이아웃:</div>
+            <div class="char-value">에디터 중심</div>
+          </div>
+          <div class="char-item">
+            <div class="char-label">밀도:</div>
+            <div class="char-value">낮음 (가독성 우선)</div>
+          </div>
+          <div class="char-item">
+            <div class="char-label">최적:</div>
+            <div class="char-value">콘텐츠 검토/편집</div>
+          </div>
+          <div class="char-item">
+            <div class="char-label">느낌:</div>
+            <div class="char-value">Notion, Google Docs</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard content-first">
+        <div class="header">
+          <h1>ContentFlow AI</h1>
+          <div class="header-nav">
+            <a href="#" class="active">편집</a>
+            <a href="#">미리보기</a>
+            <a href="#">배포</a>
+          </div>
+        </div>
+        <div class="editor-area">
+          <div class="editor-container">
+            <input
+              type="text"
+              class="editor-title"
+              value="여름 신메뉴 소개"
+              placeholder="제목 입력..."
+            />
+            <textarea class="editor-body" placeholder="본문 작성...">
+안녕하세요, 고객 여러분!
+
+무더운 여름을 시원하게 보내실 수 있도록 특별한 신메뉴를 준비했습니다.
+
+상큼한 과일과 신선한 재료로 만든 우리 가게만의 특별한 메뉴들을 만나보세요...</textarea
+            >
+          </div>
+        </div>
+        <div class="editor-toolbar">
+          <div class="toolbar-left">
+            <button class="toolbar-btn">초안 저장</button>
+            <button class="toolbar-btn">다시 생성</button>
+          </div>
+          <div>
+            <button class="toolbar-btn">취소</button>
+            <button class="toolbar-btn primary">승인 및 배포 →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let currentDirection = 1;
+      const totalDirections = 6;
+      const directionNames = [
+        'Dense Dashboard',
+        'Spacious Explorer',
+        'Card Gallery',
+        'Minimalist Clean',
+        'Dashboard Pro',
+        'Content First',
+      ];
+
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const counter = document.getElementById('counter');
+      const indicator = document.getElementById('indicator');
+      const containers = document.querySelectorAll('.mockup-container');
+
+      function updateDisplay() {
+        // Hide all containers
+        containers.forEach(container => {
+          container.classList.remove('active');
+        });
+
+        // Show current container
+        document.querySelector(`[data-direction="${currentDirection}"]`).classList.add('active');
+
+        // Update counter
+        counter.textContent = `${currentDirection} / ${totalDirections}`;
+
+        // Update indicator
+        indicator.textContent = `Direction ${currentDirection}: ${directionNames[currentDirection - 1]}`;
+
+        // Update buttons
+        prevBtn.disabled = currentDirection === 1;
+        nextBtn.disabled = currentDirection === totalDirections;
+
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      prevBtn.addEventListener('click', () => {
+        if (currentDirection > 1) {
+          currentDirection--;
+          updateDisplay();
+        }
+      });
+
+      nextBtn.addEventListener('click', () => {
+        if (currentDirection < totalDirections) {
+          currentDirection++;
+          updateDisplay();
+        }
+      });
+
+      // Keyboard navigation
+      document.addEventListener('keydown', e => {
+        if (e.key === 'ArrowLeft' && currentDirection > 1) {
+          currentDirection--;
+          updateDisplay();
+        } else if (e.key === 'ArrowRight' && currentDirection < totalDirections) {
+          currentDirection++;
+          updateDisplay();
+        }
+      });
+    </script>
+  </body>
+</html>

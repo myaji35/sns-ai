@@ -34,21 +34,16 @@ export async function POST(request: NextRequest) {
     }
 
     // Create review record
-    const { error: reviewError } = await supabase
-      .from('content_reviews')
-      .insert({
-        content_id: contentId,
-        reviewer_id: user.id,
-        review_status: reviewStatus,
-        notes: notes || null,
-      });
+    const { error: reviewError } = await supabase.from('content_reviews').insert({
+      content_id: contentId,
+      reviewer_id: user.id,
+      review_status: reviewStatus,
+      notes: notes || null,
+    });
 
     if (reviewError) {
       console.error('Review insert error:', reviewError);
-      return NextResponse.json(
-        { error: 'Failed to create review' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: 'Failed to create review' }, { status: 500 });
     }
 
     // Update content review status
@@ -76,10 +71,7 @@ export async function POST(request: NextRequest) {
     });
   } catch (error: any) {
     console.error('Review error:', error);
-    return NextResponse.json(
-      { error: 'Failed to submit review' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to submit review' }, { status: 500 });
   }
 }
 
@@ -90,10 +82,7 @@ export async function GET(request: NextRequest) {
     const contentId = searchParams.get('contentId');
 
     if (!contentId) {
-      return NextResponse.json(
-        { error: 'Content ID is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Content ID is required' }, { status: 400 });
     }
 
     // Get current user
@@ -115,18 +104,12 @@ export async function GET(request: NextRequest) {
 
     if (fetchError) {
       console.error('Fetch reviews error:', fetchError);
-      return NextResponse.json(
-        { error: 'Failed to fetch reviews' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: 'Failed to fetch reviews' }, { status: 500 });
     }
 
     return NextResponse.json({ reviews: reviews || [] });
   } catch (error: any) {
     console.error('Fetch reviews error:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch reviews' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch reviews' }, { status: 500 });
   }
 }

@@ -6,10 +6,7 @@ export async function POST(request: NextRequest) {
     const { spreadsheetId, sheetTitle, data } = await request.json();
 
     if (!spreadsheetId || !data || !Array.isArray(data)) {
-      return NextResponse.json(
-        { error: 'Invalid request data' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Invalid request data' }, { status: 400 });
     }
 
     // Get current user
@@ -43,10 +40,7 @@ export async function POST(request: NextRequest) {
 
     if (insertError) {
       console.error('Database insert error:', insertError);
-      return NextResponse.json(
-        { error: 'Failed to save content items' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: 'Failed to save content items' }, { status: 500 });
     }
 
     return NextResponse.json({
@@ -56,9 +50,6 @@ export async function POST(request: NextRequest) {
     });
   } catch (error: any) {
     console.error('Import error:', error);
-    return NextResponse.json(
-      { error: 'Failed to import data' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to import data' }, { status: 500 });
   }
 }

@@ -147,9 +147,7 @@ export default function ImportPage() {
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             {sheetData?.title || '시트 데이터 Import'}
           </h1>
-          <p className="text-gray-600">
-            아래 데이터를 검토한 후 콘텐츠 캘린더로 import하세요
-          </p>
+          <p className="text-gray-600">아래 데이터를 검토한 후 콘텐츠 캘린더로 import하세요</p>
         </div>
 
         {/* Range Selection */}
@@ -162,7 +160,7 @@ export default function ImportPage() {
               id="range"
               type="text"
               value={selectedRange}
-              onChange={(e) => setSelectedRange(e.target.value)}
+              onChange={e => setSelectedRange(e.target.value)}
               placeholder="Sheet1!A:F"
               className="flex-1 max-w-xs px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
             />
@@ -229,9 +227,7 @@ export default function ImportPage() {
 
             {/* Column Mapping Info */}
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
-              <h3 className="text-sm font-semibold text-blue-900 mb-2">
-                컬럼 매핑 정보
-              </h3>
+              <h3 className="text-sm font-semibold text-blue-900 mb-2">컬럼 매핑 정보</h3>
               <p className="text-sm text-blue-800 mb-2">
                 다음 컬럼명을 사용하면 자동으로 매핑됩니다:
               </p>
@@ -269,10 +265,7 @@ export default function ImportPage() {
               >
                 {isImporting ? (
                   <span className="flex items-center gap-2">
-                    <svg
-                      className="animate-spin h-5 w-5"
-                      viewBox="0 0 24 24"
-                    >
+                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
                       <circle
                         className="opacity-25"
                         cx="12"

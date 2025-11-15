@@ -14,9 +14,11 @@
 #### 로컬 개발 (Supabase Local)
 
 1. Supabase Dashboard 열기:
+
    ```bash
    supabase start
    ```
+
    - Studio URL: http://localhost:54323
 
 2. **Authentication → Providers → Google** 메뉴로 이동
@@ -27,7 +29,7 @@
    - **Client ID**: `YOUR_GOOGLE_CLIENT_ID`
    - **Client Secret**: `YOUR_GOOGLE_CLIENT_SECRET`
 
-4. Redirect URL 확인:
+5. Redirect URL 확인:
    - Local: `http://localhost:54321/auth/v1/callback`
 
 #### 프로덕션 배포
@@ -53,18 +55,21 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 ### 4. Google Cloud Console Authorized URLs
 
 **Authorized JavaScript origins**:
+
 - `http://localhost:3001` (개발)
 - `http://localhost:54321` (Supabase Local)
 - `https://your-domain.com` (프로덕션)
 - `https://your-project.supabase.co` (프로덕션)
 
 **Authorized redirect URIs**:
+
 - `http://localhost:54321/auth/v1/callback` (로컬)
 - `https://your-project.supabase.co/auth/v1/callback` (프로덕션)
 
 ## 테스트
 
 1. 개발 서버 실행:
+
    ```bash
    pnpm dev
    ```
@@ -98,12 +103,14 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
    - Save 클릭
 
 3. **Supabase 환경 변수 업데이트**:
+
    ```bash
    # Supabase 프로젝트 정보 가져오기
    supabase status  # 로컬인 경우
    ```
 
    `.env.local` 파일 업데이트:
+
    ```env
    NEXT_PUBLIC_SUPABASE_URL=your-actual-supabase-url
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your-actual-anon-key

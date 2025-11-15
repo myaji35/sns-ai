@@ -1,0 +1,627 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ContentFlow AI - 컬러 테마 탐색</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          'Pretendard',
+          -apple-system,
+          BlinkMacSystemFont,
+          system-ui,
+          Roboto,
+          sans-serif;
+        background: #f8fafc;
+        padding: 2rem;
+        color: #1e293b;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        color: #0f172a;
+      }
+
+      .subtitle {
+        color: #64748b;
+        margin-bottom: 2rem;
+        font-size: 1.1rem;
+      }
+
+      .themes-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+      }
+
+      .theme-card {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .theme-header {
+        margin-bottom: 1.5rem;
+      }
+
+      .theme-name {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+
+      .theme-description {
+        color: #64748b;
+        font-size: 0.95rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .theme-best-for {
+        color: #475569;
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
+
+      .color-palette {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .color-swatch {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .color-box {
+        width: 60px;
+        height: 40px;
+        border-radius: 6px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+      }
+
+      .color-info {
+        flex: 1;
+      }
+
+      .color-label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #334155;
+      }
+
+      .color-hex {
+        font-size: 0.75rem;
+        color: #94a3b8;
+        font-family: monospace;
+      }
+
+      .components-preview {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .component-section h4 {
+        font-size: 0.85rem;
+        color: #64748b;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .buttons {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .input {
+        padding: 0.75rem;
+        border-radius: 6px;
+        border: 1px solid #e2e8f0;
+        font-size: 0.9rem;
+      }
+
+      .input:focus {
+        outline: none;
+        border-color: currentColor;
+      }
+
+      .card {
+        background: white;
+        padding: 1rem;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+      }
+
+      .card-title {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+
+      .card-text {
+        font-size: 0.9rem;
+        color: #64748b;
+      }
+
+      .alert {
+        padding: 0.75rem 1rem;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .comparison-section {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-top: 2rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .comparison-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+      }
+
+      .recommendation {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 12px;
+        margin-top: 2rem;
+      }
+
+      .recommendation h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .recommendation p {
+        line-height: 1.6;
+        opacity: 0.95;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🎨 ContentFlow AI 컬러 테마 탐색</h1>
+      <p class="subtitle">
+        네 가지 테마 방향을 탐색하고 비교해보세요. 각 테마는 실제 UI 컴포넌트로 시연됩니다.
+      </p>
+
+      <div class="themes-grid">
+        <!-- Theme 1: Trust Blue -->
+        <div class="theme-card" id="theme1">
+          <div class="theme-header">
+            <h2 class="theme-name" style="color: #0ea5e9">Theme 1: Trust Blue</h2>
+            <p class="theme-description">전문적, 신뢰할 수 있는, 안정적</p>
+            <p class="theme-best-for">💼 최적: 금융, 교육, 헬스케어</p>
+          </div>
+
+          <div class="color-palette">
+            <div class="color-swatch">
+              <div class="color-box" style="background: #0ea5e9"></div>
+              <div class="color-info">
+                <div class="color-label">Primary</div>
+                <div class="color-hex">#0EA5E9</div>
+              </div>
+            </div>
+            <div class="color-swatch">
+              <div class="color-box" style="background: #06b6d4"></div>
+              <div class="color-info">
+                <div class="color-label">Secondary</div>
+                <div class="color-hex">#06B6D4</div>
+              </div>
+            </div>
+            <div class="color-swatch">
+              <div class="color-box" style="background: #10b981"></div>
+              <div class="color-info">
+                <div class="color-label">Success</div>
+                <div class="color-hex">#10B981</div>
+              </div>
+            </div>
+            <div class="color-swatch">
+              <div class="color-box" style="background: #f59e0b"></div>
+              <div class="color-info">
+                <div class="color-label">Warning</div>
+                <div class="color-hex">#F59E0B</div>
+              </div>
+            </div>
+            <div class="color-swatch">
+              <div class="color-box" style="background: #ef4444"></div>
+              <div class="color-info">
+                <div class="color-label">Error</div>
+                <div class="color-hex">#EF4444</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="components-preview">
+            <div class="component-section">
+              <h4>버튼</h4>
+              <div class="buttons">
+                <button class="btn" style="background: #0ea5e9; color: white">Primary</button>
+                <button class="btn" style="background: #e0f2fe; color: #0369a1">Secondary</button>
+                <button class="btn" style="background: #10b981; color: white">Success</button>
+              </div>
+            </div>
+
+            <div class="component-section">
+              <h4>폼 입력</h4>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="input"
+                  placeholder="콘텐츠 제목 입력..."
+                  style="border-color: #0ea5e9"
+                />
+              </div>
+            </div>
+
+            <div class="component-section">
+              <h4>카드</h4>
+              <div class="card" style="border-left: 4px solid #0ea5e9">
+                <div class="card-title">검토 대기 중</div>
+                <div class="card-text">AI가 생성한 콘텐츠가 검토를 기다리고 있습니다.</div>
+              </div>
+            </div>
+
+            <div class="component-section">
+              <h4>알림</h4>
+              <div class="alert" style="background: #e0f2fe; color: #0369a1">
+                <span>✓</span> 콘텐츠가 성공적으로 배포되었습니다.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Theme 2: Growth Green -->
+        <div class="theme-card" id="theme2">
+          <div class="theme-header">
+            <h2 class="theme-name" style="color: #10b981">Theme 2: Growth Green</h2>
+            <p class="theme-description">성장, 희망, 친환경, 차분함</p>
+            <p class="theme-best-for">🌱 최적: 친환경, 뷰티, 식품</p>
+          </div>
+
+          <div class="color-palette">
+            <div class="color-swatch">
+              <div class="color-box" style="background: #10b981"></div>
+              <div class="color-info">
+                <div class="color-label">Primary</div>
+                <div class="color-hex">#10B981</div>
+              </div>
+            </div>
+            <div class="color-swatch">
+              <div class="color-box" style="background: #14b8a6"></div>
+              <div class="color-info">
+                <div class="color-label">Secondary</div>
+                <div class="color-hex">#14B8A6</div>
+              </div>
+            </div>
+            <div class="color-swatch">
+              <div class="color-box" style="background: #22c55e"></div>
+              <div class="color-info">
+                <div class="color-label">Success</div>
+                <div class="color-hex">#22C55E</div>
+              </div>
+            </div>
+            <div class="color-swatch">
+              <div class="color-box" style="background: #f59e0b"></div>
+              <div class="color-info">
+                <div class="color-label">Warning</div>
+                <div class="color-hex">#F59E0B</div>
+              </div>
+            </div>
+            <div class="color-swatch">
+              <div class="color-box" style="background: #ef4444"></div>
+              <div class="color-info">
+                <div class="color-label">Error</div>
+                <div class="color-hex">#EF4444</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="components-preview">
+            <div class="component-section">
+              <h4>버튼</h4>
+              <div class="buttons">
+                <button class="btn" style="background: #10b981; color: white">Primary</button>
+                <button class="btn" style="background: #d1fae5; color: #065f46">Secondary</button>
+                <button class="btn" style="background: #22c55e; color: white">Success</button>
+              </div>
+            </div>
+
+            <div class="component-section">
+              <h4>폼 입력</h4>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="input"
+                  placeholder="콘텐츠 제목 입력..."
+                  style="border-color: #10b981"
+                />
+              </div>
+            </div>
+
+            <div class="component-section">
+              <h4>카드</h4>
+              <div class="card" style="border-left: 4px solid #10b981">
+                <div class="card-title">검토 대기 중</div>
+                <div class="card-text">AI가 생성한 콘텐츠가 검토를 기다리고 있습니다.</div>
+              </div>
+            </div>
+
+            <div class="component-section">
+              <h4>알림</h4>
+              <div class="alert" style="background: #d1fae5; color: #065f46">
+                <span>✓</span> 콘텐츠가 성공적으로 배포되었습니다.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Theme 3: Creative Purple -->
+        <div class="theme-card" id="theme3">
+          <div class="theme-header">
+            <h2 class="theme-name" style="color: #8b5cf6">Theme 3: Creative Purple</h2>
+            <p class="theme-description">창의적, 혁신적, 프리미엄</p>
+            <p class="theme-best-for">✨ 최적: 디자인, 패션, 뷰티</p>
+          </div>
+
+          <div class="color-palette">
+            <div class="color-swatch">
+              <div class="color-box" style="background: #8b5cf6"></div>
+              <div class="color-info">
+                <div class="color-label">Primary</div>
+                <div class="color-hex">#8B5CF6</div>
+              </div>
+            </div>
+            <div class="color-swatch">
+              <div class="color-box" style="background: #a78bfa"></div>
+              <div class="color-info">
+                <div class="color-label">Secondary</div>
+                <div class="color-hex">#A78BFA</div>
+              </div>
+            </div>
+            <div class="color-swatch">
+              <div class="color-box" style="background: #10b981"></div>
+              <div class="color-info">
+                <div class="color-label">Success</div>
+                <div class="color-hex">#10B981</div>
+              </div>
+            </div>
+            <div class="color-swatch">
+              <div class="color-box" style="background: #f59e0b"></div>
+              <div class="color-info">
+                <div class="color-label">Warning</div>
+                <div class="color-hex">#F59E0B</div>
+              </div>
+            </div>
+            <div class="color-swatch">
+              <div class="color-box" style="background: #ef4444"></div>
+              <div class="color-info">
+                <div class="color-label">Error</div>
+                <div class="color-hex">#EF4444</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="components-preview">
+            <div class="component-section">
+              <h4>버튼</h4>
+              <div class="buttons">
+                <button class="btn" style="background: #8b5cf6; color: white">Primary</button>
+                <button class="btn" style="background: #ede9fe; color: #5b21b6">Secondary</button>
+                <button class="btn" style="background: #10b981; color: white">Success</button>
+              </div>
+            </div>
+
+            <div class="component-section">
+              <h4>폼 입력</h4>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="input"
+                  placeholder="콘텐츠 제목 입력..."
+                  style="border-color: #8b5cf6"
+                />
+              </div>
+            </div>
+
+            <div class="component-section">
+              <h4>카드</h4>
+              <div class="card" style="border-left: 4px solid #8b5cf6">
+                <div class="card-title">검토 대기 중</div>
+                <div class="card-text">AI가 생성한 콘텐츠가 검토를 기다리고 있습니다.</div>
+              </div>
+            </div>
+
+            <div class="component-section">
+              <h4>알림</h4>
+              <div class="alert" style="background: #ede9fe; color: #5b21b6">
+                <span>✓</span> 콘텐츠가 성공적으로 배포되었습니다.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Theme 4: Warm Coral -->
+        <div class="theme-card" id="theme4">
+          <div class="theme-header">
+            <h2 class="theme-name" style="color: #f97316">Theme 4: Warm Coral</h2>
+            <p class="theme-description">친근함, 따뜻함, 활력</p>
+            <p class="theme-best-for">☕ 최적: 카페, 레스토랑, 서비스</p>
+          </div>
+
+          <div class="color-palette">
+            <div class="color-swatch">
+              <div class="color-box" style="background: #f97316"></div>
+              <div class="color-info">
+                <div class="color-label">Primary</div>
+                <div class="color-hex">#F97316</div>
+              </div>
+            </div>
+            <div class="color-swatch">
+              <div class="color-box" style="background: #fb923c"></div>
+              <div class="color-info">
+                <div class="color-label">Secondary</div>
+                <div class="color-hex">#FB923C</div>
+              </div>
+            </div>
+            <div class="color-swatch">
+              <div class="color-box" style="background: #10b981"></div>
+              <div class="color-info">
+                <div class="color-label">Success</div>
+                <div class="color-hex">#10B981</div>
+              </div>
+            </div>
+            <div class="color-swatch">
+              <div class="color-box" style="background: #f59e0b"></div>
+              <div class="color-info">
+                <div class="color-label">Warning</div>
+                <div class="color-hex">#F59E0B</div>
+              </div>
+            </div>
+            <div class="color-swatch">
+              <div class="color-box" style="background: #ef4444"></div>
+              <div class="color-info">
+                <div class="color-label">Error</div>
+                <div class="color-hex">#EF4444</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="components-preview">
+            <div class="component-section">
+              <h4>버튼</h4>
+              <div class="buttons">
+                <button class="btn" style="background: #f97316; color: white">Primary</button>
+                <button class="btn" style="background: #ffedd5; color: #9a3412">Secondary</button>
+                <button class="btn" style="background: #10b981; color: white">Success</button>
+              </div>
+            </div>
+
+            <div class="component-section">
+              <h4>폼 입력</h4>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="input"
+                  placeholder="콘텐츠 제목 입력..."
+                  style="border-color: #f97316"
+                />
+              </div>
+            </div>
+
+            <div class="component-section">
+              <h4>카드</h4>
+              <div class="card" style="border-left: 4px solid #f97316">
+                <div class="card-title">검토 대기 중</div>
+                <div class="card-text">AI가 생성한 콘텐츠가 검토를 기다리고 있습니다.</div>
+              </div>
+            </div>
+
+            <div class="component-section">
+              <h4>알림</h4>
+              <div class="alert" style="background: #ffedd5; color: #9a3412">
+                <span>✓</span> 콘텐츠가 성공적으로 배포되었습니다.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="recommendation">
+        <h2>💡 추천: Trust Blue (Theme 1)</h2>
+        <p>
+          <strong>이유:</strong> ContentFlow AI의 핵심 가치인 "신뢰"와 "안정성"을 가장 잘
+          표현합니다. 한국 사용자들에게 익숙한 네이버, 카카오톡의 파란색 계열로 즉각적인 신뢰감을
+          줍니다.
+        </p>
+        <p style="margin-top: 1rem">
+          <strong>장점:</strong> 다양한 업종에 중립적이며, 전문성과 친근함을 동시에 전달합니다. AI
+          기술 플랫폼에 적합한 현대적 느낌을 주면서도 소상공인에게 부담스럽지 않습니다.
+        </p>
+        <p style="margin-top: 1rem">
+          <strong>대안:</strong> 업종별 커스터마이징이 필요하다면 Growth Green(식품/뷰티) 또는 Warm
+          Coral(카페/레스토랑)도 훌륭한 선택입니다.
+        </p>
+      </div>
+
+      <div class="comparison-section">
+        <h2>📊 테마 비교 가이드</h2>
+        <div class="comparison-grid">
+          <div>
+            <h3 style="color: #0ea5e9; margin-bottom: 0.5rem">Trust Blue</h3>
+            <p style="font-size: 0.9rem; color: #64748b">
+              신뢰감이 가장 중요한 프로젝트. SaaS, 금융, 교육, 헬스케어에 최적. 보편적으로 안전한
+              선택.
+            </p>
+          </div>
+          <div>
+            <h3 style="color: #10b981; margin-bottom: 0.5rem">Growth Green</h3>
+            <p style="font-size: 0.9rem; color: #64748b">
+              성장과 긍정을 강조. 친환경, 뷰티, 식품 업종에 적합. 밝고 경쾌한 느낌.
+            </p>
+          </div>
+          <div>
+            <h3 style="color: #8b5cf6; margin-bottom: 0.5rem">Creative Purple</h3>
+            <p style="font-size: 0.9rem; color: #64748b">
+              창의성과 혁신 강조. 디자인, 패션, 크리에이티브 업종. 프리미엄 느낌.
+            </p>
+          </div>
+          <div>
+            <h3 style="color: #f97316; margin-bottom: 0.5rem">Warm Coral</h3>
+            <p style="font-size: 0.9rem; color: #64748b">
+              친근하고 따뜻함. 카페, 레스토랑, 서비스업. 접근하기 쉬운 느낌.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

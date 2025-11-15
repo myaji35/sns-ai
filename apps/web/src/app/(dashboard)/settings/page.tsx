@@ -52,7 +52,9 @@ export default function SettingsPage() {
   useEffect(() => {
     const loadData = async () => {
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
       if (!user) {
         router.push('/login');
@@ -69,7 +71,7 @@ export default function SettingsPage() {
 
       if (keys) {
         const keyMap: { [key: string]: boolean } = {};
-        keys.forEach((key) => {
+        keys.forEach(key => {
           keyMap[key.provider] = key.is_active;
         });
         setSavedKeys(keyMap);
@@ -115,21 +117,22 @@ export default function SettingsPage() {
         if (error) throw error;
       } else {
         // Insert new key
-        const { error } = await supabase
-          .from('llm_api_keys')
-          .insert({
-            user_id: user.id,
-            provider: provider,
-            api_key: apiKey,
-            is_active: true,
-          });
+        const { error } = await supabase.from('llm_api_keys').insert({
+          user_id: user.id,
+          provider: provider,
+          api_key: apiKey,
+          is_active: true,
+        });
 
         if (error) throw error;
       }
 
       setSavedKeys({ ...savedKeys, [provider]: true });
       setApiKeys({ ...apiKeys, [provider]: '' });
-      setMessage({ type: 'success', text: `${LLM_PROVIDERS.find(p => p.id === provider)?.name} API 키가 저장되었습니다` });
+      setMessage({
+        type: 'success',
+        text: `${LLM_PROVIDERS.find(p => p.id === provider)?.name} API 키가 저장되었습니다`,
+      });
       setTimeout(() => setMessage(null), 3000);
     } catch (error: any) {
       console.error('Error saving API key:', error);
@@ -205,9 +208,7 @@ export default function SettingsPage() {
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">AI 설정</h1>
-            <p className="text-gray-600">
-              AI 콘텐츠 생성을 위한 LLM API 키를 설정하세요
-            </p>
+            <p className="text-gray-600">AI 콘텐츠 생성을 위한 LLM API 키를 설정하세요</p>
           </div>
 
           {message && (
@@ -226,20 +227,24 @@ export default function SettingsPage() {
           <div className="mb-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
             <div className="flex items-start gap-3">
               <svg className="w-5 h-5 text-blue-600 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                <path
+                  fillRule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                  clipRule="evenodd"
+                />
               </svg>
               <div className="flex-1">
                 <h3 className="text-sm font-semibold text-blue-900 mb-1">보안 안내</h3>
                 <p className="text-sm text-blue-800">
-                  API 키는 암호화되어 데이터베이스에 안전하게 저장됩니다.
-                  절대 다른 사람과 공유하지 마세요.
+                  API 키는 암호화되어 데이터베이스에 안전하게 저장됩니다. 절대 다른 사람과 공유하지
+                  마세요.
                 </p>
               </div>
             </div>
           </div>
 
           <div className="space-y-6">
-            {LLM_PROVIDERS.map((provider) => (
+            {LLM_PROVIDERS.map(provider => (
               <div
                 key={provider.id}
                 className="border border-gray-200 rounded-lg p-6 hover:border-indigo-300 transition"
@@ -255,7 +260,11 @@ export default function SettingsPage() {
                       {savedKeys[provider.id] && (
                         <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
                           <svg className="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                            <path
+                              fillRule="evenodd"
+                              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                              clipRule="evenodd"
+                            />
                           </svg>
                           설정됨
                         </span>
@@ -264,14 +273,17 @@ export default function SettingsPage() {
 
                     <div className="space-y-3">
                       <div>
-                        <label htmlFor={`api-key-${provider.id}`} className="block text-sm font-medium text-gray-700 mb-2">
+                        <label
+                          htmlFor={`api-key-${provider.id}`}
+                          className="block text-sm font-medium text-gray-700 mb-2"
+                        >
                           API Key
                         </label>
                         <input
                           id={`api-key-${provider.id}`}
                           type="password"
                           value={apiKeys[provider.id] || ''}
-                          onChange={(e) => setApiKeys({ ...apiKeys, [provider.id]: e.target.value })}
+                          onChange={e => setApiKeys({ ...apiKeys, [provider.id]: e.target.value })}
                           placeholder={provider.placeholder}
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
                         />

@@ -1,0 +1,245 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>1</storyId>
+    <title>Monorepo 초기화 및 프로젝트 구조 설정</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-14</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/1-1-monorepo-initialization-and-project-structure.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>개발자</asA>
+    <iWant>Turborepo 기반 Monorepo가 설정되어</iWant>
+    <soThat>Frontend와 Backend를 효율적으로 관리할 수 있다</soThat>
+    <tasks>
+      <task id="1" ac="1,2">
+        <description>Turborepo 프로젝트 초기화</description>
+        <subtasks>
+          <subtask>npx create-turbo@latest 실행하여 기본 구조 생성</subtask>
+          <subtask>apps/web 디렉토리 생성 (Next.js 앱 준비)</subtask>
+          <subtask>apps/workflow-engine 디렉토리 생성 (NestJS 앱 준비)</subtask>
+          <subtask>packages/shared-types 디렉토리 생성</subtask>
+          <subtask>packages/database 디렉토리 생성</subtask>
+        </subtasks>
+      </task>
+      <task id="2" ac="1">
+        <description>pnpm workspace 설정</description>
+        <subtasks>
+          <subtask>pnpm-workspace.yaml 파일 생성</subtask>
+          <subtask>turbo.json에 빌드 파이프라인 설정 (build, dev, lint 명령)</subtask>
+          <subtask>루트 package.json에 workspace 스크립트 추가</subtask>
+        </subtasks>
+      </task>
+      <task id="3" ac="3">
+        <description>TypeScript 공유 설정</description>
+        <subtasks>
+          <subtask>루트 tsconfig.json 생성 (base config)</subtask>
+          <subtask>packages/shared-types/tsconfig.json 생성</subtask>
+          <subtask>packages/shared-types/package.json 설정 (exports 필드)</subtask>
+          <subtask>pnpm install 실행 및 타입 체크</subtask>
+        </subtasks>
+      </task>
+      <task id="4" ac="4">
+        <description>ESLint 및 Prettier 설정</description>
+        <subtasks>
+          <subtask>루트 .eslintrc.js 또는 eslint.config.js 생성</subtask>
+          <subtask>.prettierrc 파일 생성 (코드 포맷팅 규칙)</subtask>
+          <subtask>pnpm add -Dw eslint prettier 설치</subtask>
+          <subtask>package.json에 lint 스크립트 추가</subtask>
+        </subtasks>
+      </task>
+      <task id="5" ac="5">
+        <description>환경 변수 템플릿 작성</description>
+        <subtasks>
+          <subtask>.env.example 파일 생성</subtask>
+          <subtask>필수 환경 변수 문서화 (NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY, DATABASE_URL)</subtask>
+          <subtask>.gitignore에 .env 추가 (실제 키는 커밋 금지)</subtask>
+        </subtasks>
+      </task>
+      <task id="6" ac="1,3,4">
+        <description>로컬 개발 환경 테스트</description>
+        <subtasks>
+          <subtask>pnpm install 전체 의존성 설치</subtask>
+          <subtask>pnpm build 실행하여 빌드 확인</subtask>
+          <subtask>pnpm lint 실행하여 린팅 확인</subtask>
+          <subtask>pnpm dev 실행 (현재는 빈 앱이지만 에러 없이 실행되어야 함)</subtask>
+        </subtasks>
+      </task>
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    <criterion id="AC1">
+      <description>Turborepo Monorepo 구조가 설정되어 pnpm dev 실행 시 모든 앱이 동시에 실행된다</description>
+      <techSpecMapping>Tech Spec AC1</techSpecMapping>
+    </criterion>
+    <criterion id="AC2">
+      <description>프로젝트 루트에 apps/, packages/, turbo.json, package.json, pnpm-workspace.yaml 구조가 생성된다</description>
+      <details>
+        - apps/web (Next.js Frontend)
+        - apps/workflow-engine (NestJS Backend)
+        - packages/shared-types (공유 TypeScript 타입)
+        - packages/database (Supabase 스키마)
+      </details>
+    </criterion>
+    <criterion id="AC3">
+      <description>TypeScript 컴파일 오류가 없다</description>
+    </criterion>
+    <criterion id="AC4">
+      <description>ESLint + Prettier 설정이 적용된다</description>
+    </criterion>
+    <criterion id="AC5">
+      <description>.env.example 파일에 모든 환경 변수가 문서화된다</description>
+      <techSpecMapping>Tech Spec AC7</techSpecMapping>
+    </criterion>
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-1.md</path>
+        <title>Epic 1 Technical Specification</title>
+        <section>Detailed Design - Services and Modules</section>
+        <snippet>Monorepo 구조 정의: apps/web (Next.js Frontend), apps/workflow-engine (NestJS Backend), packages/shared-types (공유 타입), packages/database (Supabase 스키마). Turborepo 빌드 오케스트레이션과 pnpm workspace 설정.</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-1.md</path>
+        <title>Epic 1 Technical Specification</title>
+        <section>Data Models and Contracts</section>
+        <snippet>TypeScript 공유 타입 정의: Profile, ConnectedAccount, Content 등의 인터페이스. packages/shared-types/src에 user.types.ts, content.types.ts 등으로 구조화.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture Document</title>
+        <section>System Components - Frontend Stack</section>
+        <snippet>Next.js 15.5 App Router, TypeScript 5.x, Tailwind CSS 3.x, Shadcn/ui 디자인 시스템. Trust Blue (#0EA5E9) 컬러 테마.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture Document</title>
+        <section>System Components - Backend Stack</section>
+        <snippet>NestJS 11.x Workflow Engine, TypeScript, BullMQ 5.63.0 작업 큐, Redis 7.x. 모듈 구조: content, ai, distribution, sheets, queue.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture Document</title>
+        <section>Infrastructure - Monorepo</section>
+        <snippet>Turborepo + pnpm workspace 기반 Monorepo. apps/(web, workflow-engine), packages/(shared-types, database) 구조. 빌드 캐싱 및 병렬 실행 최적화.</snippet>
+      </doc>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>Project Classification</section>
+        <snippet>SaaS B2B Web Application. Next.js 15 Frontend, Supabase Backend, NestJS Workflow Engine. Turborepo Monorepo 구조.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <!-- 현재 빈 프로젝트이므로 기존 코드 artifacts 없음 -->
+      <note>이 스토리는 프로젝트의 첫 번째 스토리로, 기존 코드베이스가 없습니다. 모든 구조를 처음부터 생성합니다.</note>
+    </code>
+    <dependencies>
+      <ecosystem name="Node.js">
+        <package name="turbo" version="^2.5.8" scope="devDependencies" location="root"/>
+        <package name="typescript" version="^5.7.2" scope="devDependencies" location="root"/>
+        <package name="prettier" version="^3.4.2" scope="devDependencies" location="root"/>
+        <package name="eslint" version="^9.18.0" scope="devDependencies" location="root"/>
+        <package name="@turbo/gen" version="^2.5.8" scope="devDependencies" location="root"/>
+      </ecosystem>
+      <ecosystem name="Frontend (apps/web)">
+        <package name="next" version="15.5.0" scope="dependencies"/>
+        <package name="react" version="^19.0.0" scope="dependencies"/>
+        <package name="react-dom" version="^19.0.0" scope="dependencies"/>
+        <package name="typescript" version="^5.7.2" scope="devDependencies"/>
+        <package name="@supabase/supabase-js" version="^2.47.10" scope="dependencies"/>
+        <package name="tailwindcss" version="^3.4.17" scope="devDependencies"/>
+        <package name="class-variance-authority" version="^0.7.1" scope="dependencies"/>
+        <package name="clsx" version="^2.1.1" scope="dependencies"/>
+        <package name="tailwind-merge" version="^2.7.0" scope="dependencies"/>
+      </ecosystem>
+      <ecosystem name="Backend (apps/workflow-engine)">
+        <package name="@nestjs/common" version="^11.0.0" scope="dependencies"/>
+        <package name="@nestjs/core" version="^11.0.0" scope="dependencies"/>
+        <package name="@nestjs/config" version="^3.3.0" scope="dependencies"/>
+        <package name="@nestjs/swagger" version="^8.0.7" scope="dependencies"/>
+        <package name="@supabase/supabase-js" version="^2.47.10" scope="dependencies"/>
+        <package name="class-validator" version="^0.14.1" scope="dependencies"/>
+        <package name="class-transformer" version="^0.5.1" scope="dependencies"/>
+      </ecosystem>
+      <note>정확한 버전은 Tech Spec Epic 1의 Dependencies 섹션 참조</note>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint type="technical">
+      <rule>Node.js 20.x 이상 필수 (Next.js 15 요구사항)</rule>
+      <source>docs/sprint-artifacts/tech-spec-epic-1.md#NFRs</source>
+    </constraint>
+    <constraint type="technical">
+      <rule>pnpm 사용 필수 (npm/yarn 사용 불가)</rule>
+      <rationale>Monorepo 최적화, 빠른 설치 속도, Disk space 절약</rationale>
+      <source>docs/sprint-artifacts/tech-spec-epic-1.md#System-Architecture-Alignment</source>
+    </constraint>
+    <constraint type="architecture">
+      <rule>Turborepo 빌드 파이프라인 구조: build (dependsOn: ^build), dev (cache: false, persistent: true), lint</rule>
+      <source>스토리 1.1 Dev Notes</source>
+    </constraint>
+    <constraint type="architecture">
+      <rule>pnpm workspace 패키지 경로: apps/*, packages/*</rule>
+      <source>스토리 1.1 Dev Notes</source>
+    </constraint>
+    <constraint type="security">
+      <rule>.env 파일은 Git에 커밋 금지 (.gitignore 필수)</rule>
+      <rule>Supabase 키는 환경 변수로 관리</rule>
+      <source>docs/sprint-artifacts/tech-spec-epic-1.md#Security</source>
+    </constraint>
+    <constraint type="performance">
+      <rule>전체 빌드 시간 (cold): &lt; 3분</rule>
+      <rule>증분 빌드 시간 (Turborepo 캐시): &lt; 30초</rule>
+      <source>docs/sprint-artifacts/tech-spec-epic-1.md#Performance</source>
+    </constraint>
+    <constraint type="naming">
+      <rule>.nvmrc 파일 생성 권장하여 Node.js 버전 명시 (20.x)</rule>
+      <source>스토리 1.1 Dev Notes - Technical Constraints</source>
+    </constraint>
+  </constraints>
+
+  <interfaces>
+    <!-- 현재 단계에서는 인터페이스 정의 없음. Story 1.2, 1.3에서 API 엔드포인트 추가 예정 -->
+    <note>이 스토리는 프로젝트 구조 설정만 수행하며, API나 함수 인터페이스를 정의하지 않습니다. 후속 스토리에서 추가됩니다.</note>
+  </interfaces>
+
+  <tests>
+    <standards>
+      Manual Test 중심. pnpm install 실행 성공, pnpm build 빌드 성공, pnpm lint 린팅 통과, pnpm dev 모든 앱 동시 실행, TypeScript 타입 체크 통과 확인. Jest 단위 테스트는 Story 1.2 (Frontend), 1.3 (Backend)에서 설정.
+    </standards>
+    <locations>
+      <location>tests/ (향후 추가 예정)</location>
+      <location>apps/web/__tests__/ (Story 1.2에서 설정)</location>
+      <location>apps/workflow-engine/test/ (Story 1.3에서 설정)</location>
+    </locations>
+    <ideas>
+      <idea ac="AC1">
+        <description>pnpm dev 실행 후 모든 앱 포트 확인 (현재는 빈 앱)</description>
+        <approach>Bash: pnpm dev 실행 후 프로세스 확인</approach>
+      </idea>
+      <idea ac="AC2">
+        <description>프로젝트 디렉토리 구조 확인</description>
+        <approach>ls -la로 apps/, packages/, turbo.json, pnpm-workspace.yaml 존재 확인</approach>
+      </idea>
+      <idea ac="AC3">
+        <description>TypeScript 컴파일 에러 없음 확인</description>
+        <approach>pnpm turbo run type-check 실행</approach>
+      </idea>
+      <idea ac="AC4">
+        <description>ESLint 및 Prettier 설정 작동 확인</description>
+        <approach>pnpm lint 실행, 린팅 에러 없음 확인</approach>
+      </idea>
+      <idea ac="AC5">
+        <description>.env.example 파일 존재 및 환경 변수 문서화 확인</description>
+        <approach>cat .env.example로 NEXT_PUBLIC_SUPABASE_URL 등 4개 변수 존재 확인</approach>
+      </idea>
+    </ideas>
+  </tests>
+</story-context>

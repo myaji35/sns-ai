@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const keyMap = new Map(apiKeys.map((k) => [k.provider, k.api_key]));
+    const keyMap = new Map(apiKeys.map(k => [k.provider, k.api_key]));
 
     // Create prompt
     const systemPrompt = `당신은 전문 콘텐츠 작가입니다. 주어진 주제에 대해 블로그 포스트를 작성하세요.`;
@@ -109,8 +109,7 @@ ${tone ? `톤앤매너: ${tone}` : ''}
           });
 
           results.anthropic = {
-            content:
-              message.content[0]?.type === 'text' ? message.content[0].text : '',
+            content: message.content[0]?.type === 'text' ? message.content[0].text : '',
             model: 'claude-3-5-sonnet-20241022',
             usage: message.usage,
           };
@@ -152,9 +151,6 @@ ${tone ? `톤앤매너: ${tone}` : ''}
     return NextResponse.json({ results });
   } catch (error: any) {
     console.error('Content generation error:', error);
-    return NextResponse.json(
-      { error: 'Failed to generate content' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to generate content' }, { status: 500 });
   }
 }

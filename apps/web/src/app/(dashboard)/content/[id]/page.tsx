@@ -266,19 +266,17 @@ export default function ContentDetailPage() {
               <input
                 type="text"
                 value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={e => setTitle(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 placeholder="콘텐츠 제목"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                설명
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">설명</label>
               <textarea
                 value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                onChange={e => setDescription(e.target.value)}
                 rows={3}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 placeholder="콘텐츠 설명"
@@ -287,12 +285,10 @@ export default function ContentDetailPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  플랫폼
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">플랫폼</label>
                 <select
                   value={platform}
-                  onChange={(e) => setPlatform(e.target.value)}
+                  onChange={e => setPlatform(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 >
                   <option value="blog">블로그</option>
@@ -304,13 +300,11 @@ export default function ContentDetailPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  발행 예정일
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">발행 예정일</label>
                 <input
                   type="datetime-local"
                   value={scheduledDate}
-                  onChange={(e) => setScheduledDate(e.target.value)}
+                  onChange={e => setScheduledDate(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 />
               </div>
@@ -318,9 +312,7 @@ export default function ContentDetailPage() {
 
             <div>
               <div className="flex items-center justify-between mb-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  생성된 콘텐츠
-                </label>
+                <label className="block text-sm font-medium text-gray-700">생성된 콘텐츠</label>
                 <button
                   onClick={handleGenerateContent}
                   disabled={isGenerating || !title}
@@ -328,10 +320,7 @@ export default function ContentDetailPage() {
                 >
                   {isGenerating ? (
                     <span className="flex items-center gap-2">
-                      <svg
-                        className="animate-spin h-4 w-4"
-                        viewBox="0 0 24 24"
-                      >
+                      <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
                         <circle
                           className="opacity-25"
                           cx="12"
@@ -356,7 +345,7 @@ export default function ContentDetailPage() {
               </div>
               <textarea
                 value={generatedContent}
-                onChange={(e) => setGeneratedContent(e.target.value)}
+                onChange={e => setGeneratedContent(e.target.value)}
                 rows={15}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent font-mono text-sm"
                 placeholder="AI로 생성된 콘텐츠가 여기 표시됩니다..."

@@ -1,10 +1,11 @@
 # ContentFlow AI - Technical Architecture Document
 
 **프로젝트명:** ContentFlow AI (통합 콘텐츠 마케팅 자동화 플랫폼)
-**문서 버전:** 1.0
-**작성일:** 2025-11-14
+**문서 버전:** 2.0
+**최초 작성일:** 2025-11-14
+**최종 수정일:** 2025-11-14
 **아키텍트:** Winston
-**검증 상태:** ✅ 검증 완료
+**검증 상태:** ✅ 검증 완료 (68개 스토리 + UX Design 반영)
 
 ---
 
@@ -13,10 +14,19 @@
 ContentFlow AI는 **소상공인과 중소기업**을 위한 올인원 콘텐츠 마케팅 자동화 SaaS 플랫폼입니다. Google Sheets에서 콘텐츠를 기획하면, AI가 블로그 글과 SNS 포스트를 생성하고, 모든 채널에 자동으로 배포합니다.
 
 **핵심 아키텍처 원칙:**
+
 - **Supabase 기반**: Auth, DB, Storage 통합 플랫폼
 - **워크플로우 분리**: 복잡한 AI 작업은 별도 NestJS 서버에서 처리
 - **멀티테넌트**: RLS로 완벽한 데이터 격리
 - **확장 가능**: 수백 명 동시 사용자 지원
+
+**UX/UI 디자인 시스템 (2025-11-14 통합):**
+
+- **디자인 시스템**: Shadcn/ui (Radix UI 기반)
+- **컬러 테마**: Trust Blue (#0EA5E9) - 신뢰감 있는 파란색 계열
+- **레이아웃**: Dense Dashboard (사이드바 + 정보 집약적)
+- **타이포그래피**: Pretendard (한글 최적화)
+- **핵심 UX 원칙**: Zero Learning Curve, 실시간 피드백, WYSIWYG 편집, 명확한 상태 표시
 
 ---
 
@@ -25,18 +35,21 @@ ContentFlow AI는 **소상공인과 중소기업**을 위한 올인원 콘텐츠
 이 아키텍처는 **두 개의 PRD를 통합**한 결과입니다:
 
 ### SNS-AI (Mary's Vision)
+
 - 소상공인/중소기업 타겟
 - SNS 콘텐츠 자동화
 - 한국 시장 특화 (네이버, 카카오)
 - 가망 고객 확보
 
 ### ICOP (기존 PRD)
+
 - 블로그 콘텐츠 오케스트레이션
 - Google Sheets 기획 관리
 - 다중 LLM 비교/통합
 - 멀티모달 (텍스트 + 이미지)
 
 ### 통합 결과: ContentFlow AI
+
 **= 블로그 + SNS + AI 콘텐츠 생성 + 멀티 채널 배포**
 
 ---
@@ -117,48 +130,56 @@ ContentFlow AI는 **소상공인과 중소기업**을 위한 올인원 콘텐츠
 
 ### Frontend Stack
 
-| 기술 | 버전 | 역할 | 검증일 |
-|------|------|------|--------|
-| **Next.js** | 15.5 | React 프레임워크, App Router | 2025-11-14 |
-| **TypeScript** | 5.x | 타입 안전성 | 2025-11-14 |
-| **React** | 19.x | UI 라이브러리 | 2025-11-14 |
-| **Tailwind CSS** | 3.x | 스타일링 | 2025-11-14 |
-| **Shadcn/ui** | latest | UI 컴포넌트 | 2025-11-14 |
-| **Supabase JS** | 2.x | Supabase 클라이언트 | 2025-11-14 |
-| **TanStack Query** | 5.x | 서버 상태 관리 | 2025-11-14 |
-| **Zustand** | 4.x | 클라이언트 상태 관리 | 2025-11-14 |
+| 기술                   | 버전   | 역할                               | 검증일     |
+| ---------------------- | ------ | ---------------------------------- | ---------- |
+| **Next.js**            | 15.5   | React 프레임워크, App Router       | 2025-11-14 |
+| **TypeScript**         | 5.x    | 타입 안전성                        | 2025-11-14 |
+| **React**              | 19.x   | UI 라이브러리                      | 2025-11-14 |
+| **Tailwind CSS**       | 3.x    | 스타일링                           | 2025-11-14 |
+| **Shadcn/ui**          | latest | UI 컴포넌트 시스템 (Radix UI 기반) | 2025-11-14 |
+| **Pretendard**         | latest | 한글 최적화 폰트                   | 2025-11-14 |
+| **React Hook Form**    | 7.x    | 폼 관리 및 검증                    | 2025-11-14 |
+| **Zod**                | 3.x    | 스키마 검증                        | 2025-11-14 |
+| **Framer Motion**      | 11.x   | UI 애니메이션                      | 2025-11-14 |
+| **Novel / Tiptap**     | latest | WYSIWYG 마크다운 에디터            | 2025-11-14 |
+| **react-markdown**     | 9.x    | 마크다운 렌더링                    | 2025-11-14 |
+| **react-big-calendar** | 1.x    | 캘린더 컴포넌트                    | 2025-11-14 |
+| **Recharts**           | 2.x    | 차트 라이브러리                    | 2025-11-14 |
+| **Supabase JS**        | 2.x    | Supabase 클라이언트                | 2025-11-14 |
+| **TanStack Query**     | 5.x    | 서버 상태 관리                     | 2025-11-14 |
+| **Zustand**            | 4.x    | 클라이언트 상태 관리               | 2025-11-14 |
 
 ### Backend Stack
 
-| 기술 | 버전 | 역할 | 검증일 |
-|------|------|------|--------|
-| **Supabase** | latest | BaaS 플랫폼 (Auth, DB, Storage) | 2025-11-14 |
-| **PostgreSQL** | 15+ | 관계형 데이터베이스 | 2025-11-14 |
-| **NestJS** | 11.x | Node.js 프레임워크 | 2025-11-14 |
-| **BullMQ** | 5.63.0 | 작업 큐 관리 | 2025-11-14 |
-| **Redis** | 7.x | 인메모리 데이터베이스 (큐 저장소) | 2025-11-14 |
+| 기술           | 버전   | 역할                              | 검증일     |
+| -------------- | ------ | --------------------------------- | ---------- |
+| **Supabase**   | latest | BaaS 플랫폼 (Auth, DB, Storage)   | 2025-11-14 |
+| **PostgreSQL** | 15+    | 관계형 데이터베이스               | 2025-11-14 |
+| **NestJS**     | 11.x   | Node.js 프레임워크                | 2025-11-14 |
+| **BullMQ**     | 5.63.0 | 작업 큐 관리                      | 2025-11-14 |
+| **Redis**      | 7.x    | 인메모리 데이터베이스 (큐 저장소) | 2025-11-14 |
 
 ### AI & External Services
 
-| 서비스 | 용도 | 가격 모델 | 검증일 |
-|--------|------|-----------|--------|
-| **OpenAI GPT-4 Turbo** | 텍스트 생성 (옵션 1) | $0.01/1K tokens | 2025-11-14 |
-| **Anthropic Claude 3.5 Sonnet** | 텍스트 생성 (옵션 2) | $0.003/1K tokens | 2025-11-14 |
-| **Google Gemini 2.0 Flash** | 텍스트 생성 (옵션 3) | $0.0001/1K tokens | 2025-11-14 |
-| **fal.ai** | 이미지 생성 (FLUX 모델) | ~$0.003/image (schnell) | 2025-11-14 |
-| **Google Sheets API** | 콘텐츠 기획 관리 | 무료 (할당량 내) | 2025-11-14 |
-| **Instagram Graph API** | SNS 자동 배포 | 무료 | 2025-11-14 |
-| **Facebook Graph API** | SNS 자동 배포 | 무료 | 2025-11-14 |
+| 서비스                          | 용도                    | 가격 모델               | 검증일     |
+| ------------------------------- | ----------------------- | ----------------------- | ---------- |
+| **OpenAI GPT-4 Turbo**          | 텍스트 생성 (옵션 1)    | $0.01/1K tokens         | 2025-11-14 |
+| **Anthropic Claude 3.5 Sonnet** | 텍스트 생성 (옵션 2)    | $0.003/1K tokens        | 2025-11-14 |
+| **Google Gemini 2.0 Flash**     | 텍스트 생성 (옵션 3)    | $0.0001/1K tokens       | 2025-11-14 |
+| **fal.ai**                      | 이미지 생성 (FLUX 모델) | ~$0.003/image (schnell) | 2025-11-14 |
+| **Google Sheets API**           | 콘텐츠 기획 관리        | 무료 (할당량 내)        | 2025-11-14 |
+| **Instagram Graph API**         | SNS 자동 배포           | 무료                    | 2025-11-14 |
+| **Facebook Graph API**          | SNS 자동 배포           | 무료                    | 2025-11-14 |
 
 ### Infrastructure & DevOps
 
-| 기술 | 버전 | 역할 |
-|------|------|------|
-| **Vercel** | latest | Frontend 호스팅 (Next.js) |
-| **Railway / Render** | latest | NestJS 서버 호스팅 |
-| **Upstash Redis** | latest | Managed Redis (BullMQ용) |
-| **Docker** | latest | 컨테이너화 (선택사항) |
-| **GitHub Actions** | latest | CI/CD |
+| 기술                 | 버전   | 역할                      |
+| -------------------- | ------ | ------------------------- |
+| **Vercel**           | latest | Frontend 호스팅 (Next.js) |
+| **Railway / Render** | latest | NestJS 서버 호스팅        |
+| **Upstash Redis**    | latest | Managed Redis (BullMQ용)  |
+| **Docker**           | latest | 컨테이너화 (선택사항)     |
+| **GitHub Actions**   | latest | CI/CD                     |
 
 ---
 
@@ -495,6 +516,7 @@ CREATE INDEX idx_usage_metrics_user_id_created ON public.usage_metrics(user_id, 
 ### 1. 인증/인가 (Authentication & Authorization)
 
 **Supabase Auth 사용:**
+
 - **이메일/비밀번호** 인증
 - **OAuth 소셜 로그인** (Google, GitHub 등)
 - **JWT 토큰** 기반 세션 관리
@@ -503,6 +525,7 @@ CREATE INDEX idx_usage_metrics_user_id_created ON public.usage_metrics(user_id, 
 ### 2. 멀티테넌트 데이터 격리
 
 **RLS 정책:**
+
 ```sql
 -- 예시: 사용자는 자신의 콘텐츠만 조회
 CREATE POLICY "Users view own content" ON public.contents
@@ -510,17 +533,20 @@ CREATE POLICY "Users view own content" ON public.contents
 ```
 
 **격리 수준:**
+
 - 사용자 A는 사용자 B의 데이터를 **절대** 볼 수 없음
 - 데이터베이스 수준에서 강제 (애플리케이션 버그로 우회 불가)
 
 ### 3. 외부 API 토큰 보안
 
 **저장 방법:**
+
 1. **Supabase Vault** 사용 (권장)
    - Vault에 암호화된 시크릿 저장
    - 애플리케이션은 Vault에서 런타임에 토큰 조회
 
 2. **대안: DB 컬럼 암호화**
+
    ```sql
    -- connected_accounts.access_token을 pgcrypto로 암호화
    CREATE EXTENSION IF NOT EXISTS pgcrypto;
@@ -534,6 +560,7 @@ CREATE POLICY "Users view own content" ON public.contents
    ```
 
 **환경 변수 관리:**
+
 - `.env.local` (로컬 개발)
 - Vercel 환경 변수 (프로덕션)
 - NestJS 서버: Railway/Render 시크릿
@@ -541,6 +568,7 @@ CREATE POLICY "Users view own content" ON public.contents
 ### 4. API 속도 제한 (Rate Limiting)
 
 **Supabase RLS + 애플리케이션 레벨:**
+
 - 사용자당 시간당 콘텐츠 생성 제한 (예: 10개/시간)
 - BullMQ의 Rate Limiter 기능 사용
 
@@ -575,12 +603,12 @@ const contentQueue = new Queue('content-generation', {
 
 ### 서비스별 호스팅
 
-| 서비스 | 호스팅 플랫폼 | 이유 |
-|--------|-------------|------|
-| **Next.js Frontend** | Vercel | Next.js 최적화, 자동 배포, Edge Functions |
-| **Supabase** | Supabase Cloud | Managed BaaS, 자동 확장 |
-| **NestJS Server** | Railway 또는 Render | NestJS 지원, Redis 통합, 저렴한 가격 |
-| **Redis (BullMQ)** | Upstash Redis | Serverless Redis, 자동 확장 |
+| 서비스               | 호스팅 플랫폼       | 이유                                      |
+| -------------------- | ------------------- | ----------------------------------------- |
+| **Next.js Frontend** | Vercel              | Next.js 최적화, 자동 배포, Edge Functions |
+| **Supabase**         | Supabase Cloud      | Managed BaaS, 자동 확장                   |
+| **NestJS Server**    | Railway 또는 Render | NestJS 지원, Redis 통합, 저렴한 가격      |
+| **Redis (BullMQ)**   | Upstash Redis       | Serverless Redis, 자동 확장               |
 
 ### CI/CD 파이프라인
 
@@ -639,26 +667,29 @@ jobs:
 
 ### 현재 아키텍처 지원 규모
 
-| 지표 | MVP (1년차) | Growth (2년차) | Scale (3년차) |
-|------|------------|----------------|---------------|
-| **동시 사용자** | 100명 | 500명 | 1,000명 |
-| **월간 콘텐츠 생성** | 10,000개 | 50,000개 | 100,000개 |
-| **DB 크기** | 10GB | 50GB | 100GB |
-| **비용 (월)** | $500 | $2,000 | $5,000 |
+| 지표                 | MVP (1년차) | Growth (2년차) | Scale (3년차) |
+| -------------------- | ----------- | -------------- | ------------- |
+| **동시 사용자**      | 100명       | 500명          | 1,000명       |
+| **월간 콘텐츠 생성** | 10,000개    | 50,000개       | 100,000개     |
+| **DB 크기**          | 10GB        | 50GB           | 100GB         |
+| **비용 (월)**        | $500        | $2,000         | $5,000        |
 
 ### 확장 전략
 
 #### 1. 데이터베이스 확장
+
 - **Supabase Pro Plan**: 자동 확장 지원
 - **읽기 전용 레플리카**: 분석 쿼리 분리
 - **Connection Pooling**: Supavisor 사용
 
 #### 2. 워크플로우 엔진 확장
+
 - **수평 확장**: Railway/Render에서 인스턴스 추가
 - **BullMQ 분산**: 여러 워커 프로세스 실행
 - **Redis 클러스터**: Upstash 자동 확장
 
 #### 3. AI API 비용 최적화
+
 - **캐싱**: 유사 주제는 이전 생성물 재사용
 - **모델 선택**: Gemini Flash (저렴) → GPT-4 (고급) 단계별 사용
 - **배치 처리**: 여러 요청 묶어서 API 호출 최소화
@@ -690,6 +721,7 @@ describe('ContentReviewCard', () => {
 ```
 
 **도구:**
+
 - Jest + React Testing Library
 - Playwright (E2E)
 
@@ -722,6 +754,7 @@ describe('LLMService', () => {
 ```
 
 **도구:**
+
 - Jest + Supertest
 - BullMQ 테스트 모드
 
@@ -731,13 +764,13 @@ describe('LLMService', () => {
 
 ### 모니터링 도구
 
-| 도구 | 용도 |
-|------|------|
-| **Vercel Analytics** | Frontend 성능 모니터링 |
-| **Supabase Dashboard** | DB 쿼리 성능, 연결 풀 |
-| **Bull Board** | BullMQ 작업 큐 시각화 |
-| **Sentry** | 에러 추적 (Frontend + Backend) |
-| **Upstash Console** | Redis 메모리 사용량 |
+| 도구                   | 용도                           |
+| ---------------------- | ------------------------------ |
+| **Vercel Analytics**   | Frontend 성능 모니터링         |
+| **Supabase Dashboard** | DB 쿼리 성능, 연결 풀          |
+| **Bull Board**         | BullMQ 작업 큐 시각화          |
+| **Sentry**             | 에러 추적 (Frontend + Backend) |
+| **Upstash Console**    | Redis 메모리 사용량            |
 
 ### 구조화된 로깅
 
@@ -821,16 +854,16 @@ pnpm dev
 
 ### 1. Naming Conventions (명명 규칙)
 
-| 항목 | 규칙 | 예시 |
-|------|------|------|
-| **React 컴포넌트** | PascalCase | `ContentReviewCard.tsx` |
-| **파일명 (컴포넌트)** | PascalCase | `ContentReviewCard.tsx` |
-| **파일명 (유틸)** | kebab-case | `api-client.ts` |
-| **함수/변수** | camelCase | `generateContent()` |
-| **상수** | UPPER_SNAKE_CASE | `MAX_RETRIES` |
-| **DB 테이블** | snake_case (단수) | `content_calendar` |
-| **DB 컬럼** | snake_case | `user_id`, `created_at` |
-| **API 엔드포인트** | kebab-case | `/api/content-generation` |
+| 항목                  | 규칙              | 예시                      |
+| --------------------- | ----------------- | ------------------------- |
+| **React 컴포넌트**    | PascalCase        | `ContentReviewCard.tsx`   |
+| **파일명 (컴포넌트)** | PascalCase        | `ContentReviewCard.tsx`   |
+| **파일명 (유틸)**     | kebab-case        | `api-client.ts`           |
+| **함수/변수**         | camelCase         | `generateContent()`       |
+| **상수**              | UPPER_SNAKE_CASE  | `MAX_RETRIES`             |
+| **DB 테이블**         | snake_case (단수) | `content_calendar`        |
+| **DB 컬럼**           | snake_case        | `user_id`, `created_at`   |
+| **API 엔드포인트**    | kebab-case        | `/api/content-generation` |
 
 ### 2. 에러 처리 패턴
 
@@ -940,7 +973,7 @@ export class LLMService {
     return bestResult;
   }
 
-  private async evaluateBest(results: Array<{provider: string, content: string}>) {
+  private async evaluateBest(results: Array<{ provider: string; content: string }>) {
     // 옵션 1: 사용자가 선택 (UI로 3개 표시)
     // 옵션 2: 자동 평가 (길이, 구조, 키워드 밀도 등)
     // 옵션 3: 메타 LLM으로 평가 (GPT-4가 3개 중 best 선택)
@@ -949,12 +982,14 @@ export class LLMService {
 ```
 
 **컴포넌트:**
+
 - `OpenAIProvider`
 - `ClaudeProvider`
 - `GeminiProvider`
 - `LLMOrchestrator`
 
 **데이터 흐름:**
+
 1. 사용자가 주제 제출
 2. 3개 LLM 동시 호출 (Promise.all)
 3. 결과를 DB에 임시 저장
@@ -1009,22 +1044,26 @@ export class ContentProcessor {
 **결정:** Supabase를 백엔드 플랫폼으로 사용
 
 **맥락:**
+
 - 멀티테넌트 SaaS 구축 필요
 - 빠른 MVP 개발 요구
 - Auth, DB, Storage 통합 필요
 
 **고려한 대안:**
+
 - 자체 NestJS + PostgreSQL + Auth0
 - Firebase
 - AWS Amplify
 
 **결정 이유:**
+
 1. **RLS (Row Level Security)** - 멀티테넌트 자동 격리
 2. **PostgreSQL** - 관계형 데이터에 적합
 3. **Realtime** - 작업 진행 상황 실시간 업데이트
 4. **오픈소스** - 벤더 락인 최소화
 
 **트레이드오프:**
+
 - ✅ 장점: 빠른 개발, 자동 확장, 낮은 초기 비용
 - ❌ 단점: 복잡한 비즈니스 로직은 별도 서버 필요
 
@@ -1035,22 +1074,26 @@ export class ContentProcessor {
 **결정:** BullMQ를 작업 큐 관리 시스템으로 사용
 
 **맥락:**
+
 - 긴 실행 시간 작업 (AI 콘텐츠 생성)
 - 재시도 로직 필요
 - 크론 스케줄링 필요
 
 **고려한 대안:**
+
 - Bull (구버전)
 - Agenda
 - Temporal.io
 
 **결정 이유:**
+
 1. **TypeScript 네이티브** - NestJS와 완벽 통합
 2. **재시도 로직 내장** - 지수 백오프 지원
 3. **Bull Board** - 관리 UI 제공
 4. **성능** - Redis 기반 고속 처리
 
 **트레이드오프:**
+
 - ✅ 장점: 안정적, 기능 풍부, 커뮤니티 활발
 - ❌ 단점: Redis 의존성 (추가 인프라)
 
@@ -1061,19 +1104,23 @@ export class ContentProcessor {
 **결정:** fal.ai를 이미지 생성 서비스로 사용
 
 **맥락:**
+
 - PRD 요구사항: "고품질 FLUX 모델 + 빠른 응답"
 - 본문 이미지 5-10개 동시 생성
 
 **고려한 대안:**
+
 - Replicate
 - Stability AI
 
 **결정 이유:**
+
 1. **속도** - Replicate 대비 4배 빠름
 2. **가격** - 유사한 가격대
 3. **FLUX 지원** - 최신 고품질 모델
 
 **트레이드오프:**
+
 - ✅ 장점: 빠른 속도, 최신 모델
 - ❌ 단점: 신생 서비스 (안정성 검증 필요)
 
@@ -1086,10 +1133,12 @@ export class ContentProcessor {
 **결정:** Turborepo로 Monorepo 구성
 
 **맥락:**
+
 - Frontend (Next.js) + Backend (NestJS) 통합 관리
 - 공유 타입 정의 필요
 
 **결정 이유:**
+
 1. **타입 공유** - `shared-types` 패키지
 2. **일관된 빌드** - Turbo 캐싱
 3. **개발 경험** - `pnpm dev`로 모든 앱 동시 실행
@@ -1098,36 +1147,131 @@ export class ContentProcessor {
 
 ## 🎯 Epic to Architecture Mapping (Epic별 아키텍처 매핑)
 
-### Epic 1: 콘텐츠 기획 허브
-- **Frontend**: `app/(dashboard)/calendar/`
+**총 68개 스토리 → 아키텍처 컴포넌트 매핑 (2025-11-14 업데이트)**
+
+### Epic 1: 프로젝트 기반 설정 (Foundation Setup) - 9개 스토리
+
+- **목표**: Turborepo 기반 Next.js + NestJS 프로젝트 초기화
+- **Frontend**: `apps/web/` (Next.js 15.5 App Router)
+- **Backend**: `apps/workflow-engine/` (NestJS 11.x)
+- **Infrastructure**:
+  - Turborepo `turbo.json`, `pnpm-workspace.yaml`
+  - GitHub Actions CI/CD (`.github/workflows/`)
+  - Supabase 프로젝트 설정
+- **주요 스토리**:
+  - 1.1: Turborepo 초기화
+  - 1.2: Next.js Frontend 설정
+  - 1.3: NestJS Backend 설정
+  - 1.4-1.6: Supabase 설정 (Auth, DB, Storage)
+  - 1.7-1.9: 공유 패키지, ESLint, CI/CD
+
+### Epic 2: 사용자 인증 및 프로필 (User Authentication) - 14개 스토리
+
+- **Frontend**: `app/(auth)/`, `components/auth/`
+- **Backend**: Supabase Auth
+- **DB**: `public.profiles` 테이블
+- **외부 API**: Google OAuth
+- **주요 컴포넌트**:
+  - `LoginForm`, `SignupForm`, `ProfileForm`
+  - `AuthProvider` (Context)
+  - Middleware: `apps/web/middleware.ts` (Protected Routes)
+- **주요 스토리**:
+  - 2.1-2.3: 이메일 가입, Google OAuth, 비밀번호 재설정
+  - 2.5-2.6: 프로필 등록/수정 (업종, 브랜드명, 톤앤매너)
+  - 2.8-2.14: 온보딩 플로우 (3단계)
+
+### Epic 3: 콘텐츠 기획 관리 (Content Planning) - 14개 스토리
+
+- **Frontend**: `app/(dashboard)/calendar/`, `components/calendar/`
 - **Backend**: `workflow-engine/src/modules/sheets/`
-- **DB**: `content_calendar` 테이블
+- **DB**: `content_calendar` 테이블, `connected_accounts`
 - **외부 API**: Google Sheets API
+- **주요 컴포넌트**:
+  - `ContentCalendar` (react-big-calendar 기반)
+  - `SheetsConnector`
+  - `TopicGenerator` (AI 하위 주제 생성)
+- **주요 스토리**:
+  - 3.1-3.2: Google Sheets OAuth 연동
+  - 3.3: 캘린더 생성 및 템플릿 적용
+  - 3.4-3.5: 주제 입력 및 자동 감지
+  - 3.6: AI 하위 주제 10개 생성
+  - 3.10-3.11: 발행 빈도 설정, 예약 스케줄링
 
-### Epic 2: AI 콘텐츠 생성 엔진
-- **Frontend**: `app/(dashboard)/content/`
+### Epic 4: AI 콘텐츠 생성 엔진 (AI Content Generation) - 12개 스토리
+
+- **Frontend**: `app/(dashboard)/content/`, `components/content/`
 - **Backend**: `workflow-engine/src/modules/ai/`, `content/`
-- **DB**: `contents` 테이블
-- **외부 API**: OpenAI, Anthropic, Google AI
+- **DB**: `contents` 테이블, `job_logs`
+- **외부 API**: OpenAI GPT-4 Turbo, Anthropic Claude 3.5 Sonnet, Google Gemini 2.0 Flash
+- **Queue**: BullMQ `content-generation` 큐
+- **주요 서비스**:
+  - `LLMService` (멀티 LLM 오케스트레이터)
+  - `OpenAIProvider`, `ClaudeProvider`, `GeminiProvider`
+  - `ContentQualityEvaluator`
+  - `ContentProcessor` (BullMQ Worker)
+- **주요 스토리**:
+  - 4.1-4.3: LLM Provider 통합 (OpenAI, Claude, Gemini)
+  - 4.4: 멀티 LLM 동시 호출 (Promise.all)
+  - 4.5: 품질 평가 및 최상 선택 알고리즘
+  - 4.6-4.8: 블로그 포스트 생성 (1,500-2,500자)
+  - 4.9-4.10: SEO 메타 설명, 키워드 10개 생성
+  - 4.11: 브랜드 톤앤매너 반영
 
-### Epic 3: 이미지 자동 생성
-- **Backend**: `workflow-engine/src/modules/ai/image.service.ts`
-- **DB**: `contents.thumbnail_url`, `body_images`
-- **외부 API**: fal.ai
+### Epic 5: 검토 및 승인 워크플로우 (Review & Approval) - 9개 스토리
 
-### Epic 4: 멀티 채널 배포
-- **Backend**: `workflow-engine/src/modules/distribution/`
-- **DB**: `contents.published_urls`
-- **외부 API**: Instagram, Facebook, 네이버, 카카오, WordPress
-
-### Epic 5: 검토 워크플로우
-- **Frontend**: `app/(dashboard)/content/review/`
+- **Frontend**: `app/(dashboard)/content/review/[id]/`, `components/review/`
 - **Backend**: Supabase Realtime
-- **DB**: `contents.review_status`
+- **DB**: `contents.review_status`, `contents.reviewed_at`
+- **주요 컴포넌트**:
+  - `MarkdownEditor` (Novel/Tiptap 기반)
+  - `LivePreview` (react-markdown)
+  - `ReviewActions` (승인/거절 버튼)
+  - `QualityFeedback` (별점 1-5)
+- **UX Pattern**: Split View (50/50), Content First Direction
+- **주요 스토리**:
+  - 5.1: 실시간 알림 (Supabase Realtime)
+  - 5.2: 마크다운 에디터 & 미리보기 (Split View)
+  - 5.3-5.4: 제목/본문 수정 기능
+  - 5.5-5.7: 승인/거절 액션, 품질 피드백
+  - 5.8: 재생성 옵션
 
-### Epic 6: 분석 & 최적화
-- **Frontend**: `app/(dashboard)/analytics/`
-- **DB**: `usage_metrics`, `contents` (engagement 데이터)
+### Epic 6: 멀티 채널 배포 (Multi-Channel Distribution) - 14개 스토리
+
+- **Frontend**: `app/(dashboard)/distribution/`, `components/distribution/`
+- **Backend**: `workflow-engine/src/modules/distribution/`
+- **DB**: `connected_accounts`, `contents.published_urls`
+- **외부 API**: Instagram Graph API, Facebook Graph API, 네이버 블로그 API
+- **Queue**: BullMQ `distribution` 큐
+- **주요 서비스**:
+  - `InstagramService`
+  - `FacebookService`
+  - `NaverBlogService`
+  - `DistributionOrchestrator`
+- **주요 스토리**:
+  - 6.1-6.3: SNS 계정 OAuth 연동 (Instagram, Facebook, 네이버)
+  - 6.4-6.6: 자동 게시 (이미지+캡션, 텍스트, HTML 변환)
+  - 6.7-6.8: 예약 배포, 크론 스케줄링
+  - 6.9-6.10: 재시도 로직 (최대 3회), 배포 실패 처리
+  - 6.11-6.12: 배포 완료 알림, URL 제공
+
+### Epic 7: 대시보드 및 사용량 관리 (Dashboard & Usage) - 10개 스토리
+
+- **Frontend**: `app/(dashboard)/dashboard/`, `components/dashboard/`, `components/analytics/`
+- **Backend**: Supabase 쿼리
+- **DB**: `usage_metrics`, `contents` (집계 쿼리)
+- **주요 컴포넌트**:
+  - `StatsCard` (4개 통계 카드)
+  - `ReviewQueueList` (검토 대기 목록)
+  - `ContentCalendarView`
+  - `UsageProgressBar`
+  - `AnalyticsChart` (Recharts)
+- **UX Pattern**: Dense Dashboard (Direction 1)
+- **주요 스토리**:
+  - 7.1-7.2: 통계 카드 (생성, 검토 대기, 배포, 승인율)
+  - 7.3: 콘텐츠 캘린더 뷰 (월간)
+  - 7.4-7.5: 개별 콘텐츠 상세, 기본 분석
+  - 7.6-7.8: 사용량 추적, 할당량 표시, 경고 알림
+  - 7.9-7.10: 관리자 UI (Bull Board), 시스템 모니터링
 
 ---
 
@@ -1160,6 +1304,7 @@ export class ContentProcessor {
    - Supabase RPC 함수로 복잡한 쿼리 최적화
 
 2. **BullMQ 동시성**
+
    ```typescript
    @Process({ name: 'generate-content', concurrency: 5 })
    async handleGeneration(job: Job) {
@@ -1178,6 +1323,7 @@ export class ContentProcessor {
 ### 1. Frontend ↔ Supabase
 
 **방법:** Supabase JS SDK
+
 ```typescript
 import { createClient } from '@supabase/supabase-js';
 
@@ -1187,15 +1333,13 @@ const supabase = createClient(
 );
 
 // 데이터 조회
-const { data, error } = await supabase
-  .from('contents')
-  .select('*')
-  .eq('review_status', 'pending');
+const { data, error } = await supabase.from('contents').select('*').eq('review_status', 'pending');
 ```
 
 ### 2. Frontend ↔ Workflow Engine
 
 **방법:** Next.js API Routes → NestJS REST API
+
 ```typescript
 // app/api/content/generate/route.ts
 export async function POST(request: Request) {
@@ -1214,6 +1358,7 @@ export async function POST(request: Request) {
 ### 3. Supabase ↔ Workflow Engine
 
 **방법:** Supabase Webhooks
+
 ```sql
 -- Supabase에서 콘텐츠 승인 시 Webhook 트리거
 CREATE OR REPLACE FUNCTION notify_content_approved()
@@ -1238,6 +1383,7 @@ EXECUTE FUNCTION notify_content_approved();
 ### 4. Workflow Engine ↔ External APIs
 
 **방법:** NestJS HTTP Module + 재시도 로직
+
 ```typescript
 import { HttpService } from '@nestjs/axios';
 import { retry } from 'rxjs/operators';
@@ -1264,6 +1410,7 @@ export class OpenAIProvider {
 ### Phase 1: MVP 개발 (3-6개월)
 
 1. **프로젝트 초기화**
+
    ```bash
    npx create-turbo@latest contentflow-ai
    cd contentflow-ai
@@ -1302,12 +1449,14 @@ export class OpenAIProvider {
 ## 📚 참고 자료 (References)
 
 ### 공식 문서
+
 - [Next.js 15 Documentation](https://nextjs.org/docs)
 - [Supabase Documentation](https://supabase.com/docs)
 - [NestJS Documentation](https://docs.nestjs.com/)
 - [BullMQ Documentation](https://docs.bullmq.io/)
 
 ### 관련 프로젝트
+
 - [프로젝트 개요서](./project-brief.md)
 - [경쟁사 분석](./competitive-analysis.md)
 - [시장 조사](./market-research.md)
@@ -1318,6 +1467,7 @@ export class OpenAIProvider {
 ## ✅ 검증 체크리스트
 
 ### 필수 항목
+
 - [x] 기술 스택에 구체적 버전 명시
 - [x] 모든 Epic이 아키텍처 컴포넌트에 매핑
 - [x] 완전한 소스 트리 (실제 구조, 플레이스홀더 없음)
@@ -1328,6 +1478,7 @@ export class OpenAIProvider {
 - [x] 아키텍처 결정 기록 (ADR) 포함
 
 ### 권장 항목
+
 - [x] 배포 아키텍처 다이어그램
 - [x] 확장성 고려사항
 - [x] 모니터링 전략

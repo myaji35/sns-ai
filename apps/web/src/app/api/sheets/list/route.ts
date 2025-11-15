@@ -24,10 +24,7 @@ export async function GET(request: NextRequest) {
       .single();
 
     if (!account) {
-      return NextResponse.json(
-        { error: 'Google Sheets not connected' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Google Sheets not connected' }, { status: 404 });
     }
 
     // Set up OAuth2 client
@@ -65,9 +62,6 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    return NextResponse.json(
-      { error: 'Failed to list Google Sheets' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to list Google Sheets' }, { status: 500 });
   }
 }

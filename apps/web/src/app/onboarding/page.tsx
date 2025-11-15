@@ -8,7 +8,10 @@ import { z } from 'zod';
 import { createClient } from '@/lib/supabase/client';
 
 const onboardingSchema = z.object({
-  companyName: z.string().min(1, '브랜드/회사명을 입력해주세요').max(50, '최대 50자까지 입력 가능합니다'),
+  companyName: z
+    .string()
+    .min(1, '브랜드/회사명을 입력해주세요')
+    .max(50, '최대 50자까지 입력 가능합니다'),
   industry: z.string().min(1, '업종을 선택해주세요'),
   brandDescription: z.string().max(200, '최대 200자까지 입력 가능합니다').optional(),
   toneAndManner: z.array(z.string()).optional(),
@@ -85,7 +88,9 @@ export default function OnboardingPage() {
     setIsLoading(true);
     try {
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
       if (user) {
         await supabase
@@ -112,7 +117,9 @@ export default function OnboardingPage() {
 
     try {
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
       if (!user) {
         setError('사용자 정보를 찾을 수 없습니다');
@@ -145,8 +152,8 @@ export default function OnboardingPage() {
   };
 
   const toggleTone = (tone: string) => {
-    setSelectedTones((prev) =>
-      prev.includes(tone) ? prev.filter((t) => t !== tone) : [...prev, tone]
+    setSelectedTones(prev =>
+      prev.includes(tone) ? prev.filter(t => t !== tone) : [...prev, tone]
     );
   };
 
@@ -183,7 +190,10 @@ export default function OnboardingPage() {
               </div>
 
               <div>
-                <label htmlFor="companyName" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="companyName"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   브랜드/회사명 <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -208,7 +218,7 @@ export default function OnboardingPage() {
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
                 >
                   <option value="">업종을 선택하세요</option>
-                  {INDUSTRIES.map((industry) => (
+                  {INDUSTRIES.map(industry => (
                     <option key={industry} value={industry}>
                       {industry}
                     </option>
@@ -240,7 +250,10 @@ export default function OnboardingPage() {
               </div>
 
               <div>
-                <label htmlFor="brandDescription" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="brandDescription"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   브랜드 설명 (선택)
                 </label>
                 <textarea
@@ -263,7 +276,7 @@ export default function OnboardingPage() {
                   톤앤매너 (선택)
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  {TONES.map((tone) => (
+                  {TONES.map(tone => (
                     <button
                       key={tone.value}
                       type="button"
@@ -342,7 +355,9 @@ export default function OnboardingPage() {
                     <div className="flex items-start gap-3">
                       <span className="font-semibold text-gray-700 min-w-24">톤:</span>
                       <span className="text-gray-900">
-                        {selectedTones.map((tone) => TONES.find((t) => t.value === tone)?.label).join(', ')}
+                        {selectedTones
+                          .map(tone => TONES.find(t => t.value === tone)?.label)
+                          .join(', ')}
                       </span>
                     </div>
                   )}

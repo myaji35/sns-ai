@@ -5,13 +5,11 @@ export async function GET(request: NextRequest) {
   try {
     const clientId = process.env.TWITTER_CLIENT_ID;
     const clientSecret = process.env.TWITTER_CLIENT_SECRET;
-    const redirectUri = process.env.TWITTER_REDIRECT_URI || 'http://localhost:3001/api/auth/twitter/callback';
+    const redirectUri =
+      process.env.TWITTER_REDIRECT_URI || 'http://localhost:3001/api/auth/twitter/callback';
 
     if (!clientId || !clientSecret) {
-      return NextResponse.json(
-        { error: 'Twitter credentials not configured' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: 'Twitter credentials not configured' }, { status: 500 });
     }
 
     // Twitter OAuth 2.0 (User Context)
@@ -23,10 +21,12 @@ export async function GET(request: NextRequest) {
 
     // Store code_verifier in a secure way (you might want to use a session or database)
     // For now, we'll pass it via state (not recommended for production)
-    const state = Buffer.from(JSON.stringify({
-      platform: 'twitter',
-      code_verifier: codeVerifier,
-    })).toString('base64');
+    const state = Buffer.from(
+      JSON.stringify({
+        platform: 'twitter',
+        code_verifier: codeVerifier,
+      })
+    ).toString('base64');
 
     authUrl.searchParams.set('response_type', 'code');
     authUrl.searchParams.set('client_id', clientId);

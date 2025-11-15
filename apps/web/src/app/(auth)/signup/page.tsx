@@ -8,19 +8,21 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { createClient } from '@/lib/supabase/client';
 
-const signupSchema = z.object({
-  email: z.string().email('유효한 이메일을 입력해주세요'),
-  password: z
-    .string()
-    .min(8, '비밀번호는 최소 8자 이상이어야 합니다')
-    .regex(/[A-Z]/, '대문자를 최소 1개 포함해야 합니다')
-    .regex(/[0-9]/, '숫자를 최소 1개 포함해야 합니다')
-    .regex(/[^A-Za-z0-9]/, '특수문자를 최소 1개 포함해야 합니다'),
-  confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: '비밀번호가 일치하지 않습니다',
-  path: ['confirmPassword'],
-});
+const signupSchema = z
+  .object({
+    email: z.string().email('유효한 이메일을 입력해주세요'),
+    password: z
+      .string()
+      .min(8, '비밀번호는 최소 8자 이상이어야 합니다')
+      .regex(/[A-Z]/, '대문자를 최소 1개 포함해야 합니다')
+      .regex(/[0-9]/, '숫자를 최소 1개 포함해야 합니다')
+      .regex(/[^A-Za-z0-9]/, '특수문자를 최소 1개 포함해야 합니다'),
+    confirmPassword: z.string(),
+  })
+  .refine(data => data.password === data.confirmPassword, {
+    message: '비밀번호가 일치하지 않습니다',
+    path: ['confirmPassword'],
+  });
 
 type SignupFormData = z.infer<typeof signupSchema>;
 
@@ -153,9 +155,7 @@ export default function SignupPage() {
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
               placeholder="name@example.com"
             />
-            {errors.email && (
-              <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
-            )}
+            {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
           </div>
 
           <div>
@@ -183,13 +183,17 @@ export default function SignupPage() {
                         passwordStrength === 'weak'
                           ? 'w-1/3 bg-red-500'
                           : passwordStrength === 'medium'
-                          ? 'w-2/3 bg-yellow-500'
-                          : 'w-full bg-green-500'
+                            ? 'w-2/3 bg-yellow-500'
+                            : 'w-full bg-green-500'
                       }`}
                     />
                   </div>
                   <span className="text-xs font-medium text-gray-600">
-                    {passwordStrength === 'weak' ? '약함' : passwordStrength === 'medium' ? '보통' : '강함'}
+                    {passwordStrength === 'weak'
+                      ? '약함'
+                      : passwordStrength === 'medium'
+                        ? '보통'
+                        : '강함'}
                   </span>
                 </div>
               </div>
@@ -197,7 +201,10 @@ export default function SignupPage() {
           </div>
 
           <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="confirmPassword"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               비밀번호 확인
             </label>
             <input

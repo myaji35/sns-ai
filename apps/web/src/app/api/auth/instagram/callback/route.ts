@@ -15,9 +15,7 @@ export async function GET(request: NextRequest) {
     }
 
     if (!code) {
-      return NextResponse.redirect(
-        `http://localhost:3001/connect?error=no_code`
-      );
+      return NextResponse.redirect(`http://localhost:3001/connect?error=no_code`);
     }
 
     // Get current user
@@ -27,20 +25,17 @@ export async function GET(request: NextRequest) {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.redirect(
-        `http://localhost:3001/login?error=not_authenticated`
-      );
+      return NextResponse.redirect(`http://localhost:3001/login?error=not_authenticated`);
     }
 
     // Exchange code for access token
     const clientId = process.env.INSTAGRAM_CLIENT_ID;
     const clientSecret = process.env.INSTAGRAM_CLIENT_SECRET;
-    const redirectUri = process.env.INSTAGRAM_REDIRECT_URI || 'http://localhost:3001/api/auth/instagram/callback';
+    const redirectUri =
+      process.env.INSTAGRAM_REDIRECT_URI || 'http://localhost:3001/api/auth/instagram/callback';
 
     if (!clientId || !clientSecret) {
-      return NextResponse.redirect(
-        `http://localhost:3001/connect?error=missing_credentials`
-      );
+      return NextResponse.redirect(`http://localhost:3001/connect?error=missing_credentials`);
     }
 
     const tokenUrl = 'https://graph.facebook.com/v18.0/oauth/access_token';
@@ -56,9 +51,7 @@ export async function GET(request: NextRequest) {
 
     if (!tokenResponse.ok || !tokenData.access_token) {
       console.error('Token exchange failed:', tokenData);
-      return NextResponse.redirect(
-        `http://localhost:3001/connect?error=token_exchange_failed`
-      );
+      return NextResponse.redirect(`http://localhost:3001/connect?error=token_exchange_failed`);
     }
 
     const accessToken = tokenData.access_token;
@@ -71,9 +64,7 @@ export async function GET(request: NextRequest) {
 
     if (!meResponse.ok) {
       console.error('Failed to get user info:', meData);
-      return NextResponse.redirect(
-        `http://localhost:3001/connect?error=failed_to_get_user_info`
-      );
+      return NextResponse.redirect(`http://localhost:3001/connect?error=failed_to_get_user_info`);
     }
 
     // Find Instagram Business Account
@@ -112,9 +103,7 @@ export async function GET(request: NextRequest) {
     const expiresIn = longLivedData.expires_in; // Usually 60 days
 
     // Calculate expiry date
-    const expiryDate = expiresIn
-      ? new Date(Date.now() + expiresIn * 1000).toISOString()
-      : null;
+    const expiryDate = expiresIn ? new Date(Date.now() + expiresIn * 1000).toISOString() : null;
 
     // Save to database
     const { error: dbError } = await supabase.from('connected_accounts').upsert(
@@ -138,18 +127,12 @@ export async function GET(request: NextRequest) {
 
     if (dbError) {
       console.error('Database error:', dbError);
-      return NextResponse.redirect(
-        `http://localhost:3001/connect?error=database_error`
-      );
+      return NextResponse.redirect(`http://localhost:3001/connect?error=database_error`);
     }
 
-    return NextResponse.redirect(
-      `http://localhost:3001/connect?success=instagram`
-    );
+    return NextResponse.redirect(`http://localhost:3001/connect?success=instagram`);
   } catch (error: any) {
     console.error('Instagram callback error:', error);
-    return NextResponse.redirect(
-      `http://localhost:3001/connect?error=callback_failed`
-    );
+    return NextResponse.redirect(`http://localhost:3001/connect?error=callback_failed`);
   }
 }

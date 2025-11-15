@@ -58,34 +58,31 @@ export default function AnalyticsPage() {
 
       // Calculate analytics
       const total = contents?.length || 0;
-      const published = contents?.filter((c) => c.status === 'published').length || 0;
-      const pending = contents?.filter((c) => c.status === 'pending').length || 0;
-      const scheduled = contents?.filter((c) => c.status === 'scheduled').length || 0;
-      const approved =
-        contents?.filter((c) => c.review_status === 'approved').length || 0;
-      const rejected =
-        contents?.filter((c) => c.review_status === 'rejected').length || 0;
+      const published = contents?.filter(c => c.status === 'published').length || 0;
+      const pending = contents?.filter(c => c.status === 'pending').length || 0;
+      const scheduled = contents?.filter(c => c.status === 'scheduled').length || 0;
+      const approved = contents?.filter(c => c.review_status === 'approved').length || 0;
+      const rejected = contents?.filter(c => c.review_status === 'rejected').length || 0;
 
       // Platform breakdown
       const platformBreakdown: { [key: string]: number } = {};
-      contents?.forEach((c) => {
+      contents?.forEach(c => {
         const platform = c.platform || 'unknown';
         platformBreakdown[platform] = (platformBreakdown[platform] || 0) + 1;
       });
 
       // Status breakdown
       const statusBreakdown: { [key: string]: number } = {};
-      contents?.forEach((c) => {
+      contents?.forEach(c => {
         const status = c.status || 'unknown';
         statusBreakdown[status] = (statusBreakdown[status] || 0) + 1;
       });
 
       // Review status breakdown
       const reviewStatusBreakdown: { [key: string]: number } = {};
-      contents?.forEach((c) => {
+      contents?.forEach(c => {
         const reviewStatus = c.review_status || 'draft';
-        reviewStatusBreakdown[reviewStatus] =
-          (reviewStatusBreakdown[reviewStatus] || 0) + 1;
+        reviewStatusBreakdown[reviewStatus] = (reviewStatusBreakdown[reviewStatus] || 0) + 1;
       });
 
       setAnalytics({
@@ -148,12 +145,8 @@ export default function AnalyticsPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            콘텐츠 분석 대시보드
-          </h1>
-          <p className="text-gray-600">
-            콘텐츠 생성 및 발행 현황을 한눈에 확인하세요
-          </p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">콘텐츠 분석 대시보드</h1>
+          <p className="text-gray-600">콘텐츠 생성 및 발행 현황을 한눈에 확인하세요</p>
         </div>
 
         {error && (
@@ -169,12 +162,8 @@ export default function AnalyticsPage() {
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600 mb-1">
-                      전체 콘텐츠
-                    </p>
-                    <p className="text-3xl font-bold text-gray-900">
-                      {analytics.totalContents}
-                    </p>
+                    <p className="text-sm font-medium text-gray-600 mb-1">전체 콘텐츠</p>
+                    <p className="text-3xl font-bold text-gray-900">{analytics.totalContents}</p>
                   </div>
                   <div className="bg-indigo-100 p-3 rounded-lg">
                     <svg
@@ -197,9 +186,7 @@ export default function AnalyticsPage() {
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600 mb-1">
-                      발행 완료
-                    </p>
+                    <p className="text-sm font-medium text-gray-600 mb-1">발행 완료</p>
                     <p className="text-3xl font-bold text-green-600">
                       {analytics.publishedContents}
                     </p>
@@ -252,9 +239,7 @@ export default function AnalyticsPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-gray-600 mb-1">대기 중</p>
-                    <p className="text-3xl font-bold text-amber-600">
-                      {analytics.pendingContents}
-                    </p>
+                    <p className="text-3xl font-bold text-amber-600">{analytics.pendingContents}</p>
                   </div>
                   <div className="bg-amber-100 p-3 rounded-lg">
                     <svg
@@ -278,103 +263,84 @@ export default function AnalyticsPage() {
             {/* Platform Breakdown */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                  플랫폼별 분포
-                </h2>
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">플랫폼별 분포</h2>
                 <div className="space-y-3">
-                  {Object.entries(analytics.platformBreakdown).map(
-                    ([platform, count]) => (
-                      <div key={platform} className="flex items-center">
-                        <div className="flex-1">
-                          <div className="flex items-center justify-between mb-1">
-                            <span className="text-sm font-medium text-gray-700 capitalize">
-                              {platform}
-                            </span>
-                            <span className="text-sm font-semibold text-gray-900">
-                              {count}
-                            </span>
-                          </div>
-                          <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div
-                              className="bg-indigo-600 h-2 rounded-full"
-                              style={{
-                                width: `${(count / analytics.totalContents) * 100}%`,
-                              }}
-                            ></div>
-                          </div>
+                  {Object.entries(analytics.platformBreakdown).map(([platform, count]) => (
+                    <div key={platform} className="flex items-center">
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-sm font-medium text-gray-700 capitalize">
+                            {platform}
+                          </span>
+                          <span className="text-sm font-semibold text-gray-900">{count}</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div
+                            className="bg-indigo-600 h-2 rounded-full"
+                            style={{
+                              width: `${(count / analytics.totalContents) * 100}%`,
+                            }}
+                          ></div>
                         </div>
                       </div>
-                    )
-                  )}
+                    </div>
+                  ))}
                 </div>
               </div>
 
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                  검토 상태
-                </h2>
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">검토 상태</h2>
                 <div className="space-y-3">
-                  {Object.entries(analytics.reviewStatusBreakdown).map(
-                    ([status, count]) => (
-                      <div key={status} className="flex items-center">
-                        <div className="flex-1">
-                          <div className="flex items-center justify-between mb-1">
-                            <span className="text-sm font-medium text-gray-700 capitalize">
-                              {status === 'draft' && '초안'}
-                              {status === 'pending_review' && '검토 대기'}
-                              {status === 'approved' && '승인됨'}
-                              {status === 'rejected' && '거부됨'}
-                            </span>
-                            <span className="text-sm font-semibold text-gray-900">
-                              {count}
-                            </span>
-                          </div>
-                          <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div
-                              className={`h-2 rounded-full ${
-                                status === 'approved'
-                                  ? 'bg-green-600'
-                                  : status === 'rejected'
+                  {Object.entries(analytics.reviewStatusBreakdown).map(([status, count]) => (
+                    <div key={status} className="flex items-center">
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-sm font-medium text-gray-700 capitalize">
+                            {status === 'draft' && '초안'}
+                            {status === 'pending_review' && '검토 대기'}
+                            {status === 'approved' && '승인됨'}
+                            {status === 'rejected' && '거부됨'}
+                          </span>
+                          <span className="text-sm font-semibold text-gray-900">{count}</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div
+                            className={`h-2 rounded-full ${
+                              status === 'approved'
+                                ? 'bg-green-600'
+                                : status === 'rejected'
                                   ? 'bg-red-600'
                                   : status === 'pending_review'
-                                  ? 'bg-amber-600'
-                                  : 'bg-gray-400'
-                              }`}
-                              style={{
-                                width: `${(count / analytics.totalContents) * 100}%`,
-                              }}
-                            ></div>
-                          </div>
+                                    ? 'bg-amber-600'
+                                    : 'bg-gray-400'
+                            }`}
+                            style={{
+                              width: `${(count / analytics.totalContents) * 100}%`,
+                            }}
+                          ></div>
                         </div>
                       </div>
-                    )
-                  )}
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
 
             {/* Status Breakdown */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                발행 상태 분포
-              </h2>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">발행 상태 분포</h2>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                {Object.entries(analytics.statusBreakdown).map(
-                  ([status, count]) => (
-                    <div
-                      key={status}
-                      className="bg-gray-50 rounded-lg p-4 text-center"
-                    >
-                      <p className="text-2xl font-bold text-gray-900">{count}</p>
-                      <p className="text-sm text-gray-600 capitalize mt-1">
-                        {status === 'pending' && '대기'}
-                        {status === 'scheduled' && '예약됨'}
-                        {status === 'published' && '발행됨'}
-                        {status === 'failed' && '실패'}
-                      </p>
-                    </div>
-                  )
-                )}
+                {Object.entries(analytics.statusBreakdown).map(([status, count]) => (
+                  <div key={status} className="bg-gray-50 rounded-lg p-4 text-center">
+                    <p className="text-2xl font-bold text-gray-900">{count}</p>
+                    <p className="text-sm text-gray-600 capitalize mt-1">
+                      {status === 'pending' && '대기'}
+                      {status === 'scheduled' && '예약됨'}
+                      {status === 'published' && '발행됨'}
+                      {status === 'failed' && '실패'}
+                    </p>
+                  </div>
+                ))}
               </div>
             </div>
           </>

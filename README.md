@@ -83,6 +83,7 @@ pnpm dev
 ## 🛠️ Tech Stack
 
 ### Frontend
+
 - Next.js 15.5
 - TypeScript 5.x
 - Tailwind CSS 3.x
@@ -92,6 +93,7 @@ pnpm dev
 - Zustand
 
 ### Backend
+
 - Supabase (BaaS)
 - NestJS 11.x
 - BullMQ 5.63.0
@@ -99,6 +101,7 @@ pnpm dev
 - PostgreSQL 15+
 
 ### AI Services
+
 - OpenAI GPT-4 Turbo
 - Anthropic Claude 3.5 Sonnet
 - Google Gemini 2.0 Flash
@@ -158,6 +161,7 @@ railway token create
 ```
 
 Railway Dashboard에서 다음 환경 변수를 설정하세요:
+
 - `SUPABASE_URL`
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `REDIS_URL`
@@ -169,6 +173,7 @@ Railway Dashboard에서 다음 환경 변수를 설정하세요:
 ## 📈 Development Roadmap
 
 ### Phase 1: MVP (3-6개월)
+
 - [x] 프로젝트 초기화
 - [ ] Supabase Auth + 사용자 프로필
 - [ ] Google Sheets 연동
@@ -178,6 +183,7 @@ Railway Dashboard에서 다음 환경 변수를 설정하세요:
 - [ ] 대시보드 UI
 
 ### Phase 2: 고도화 (6-12개월)
+
 - [ ] 다중 LLM 비교 기능
 - [ ] 이미지 자동 생성
 - [ ] 한국 SNS (네이버, 카카오) 연동

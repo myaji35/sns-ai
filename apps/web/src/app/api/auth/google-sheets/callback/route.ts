@@ -8,15 +8,11 @@ export async function GET(request: NextRequest) {
   const error = searchParams.get('error');
 
   if (error) {
-    return NextResponse.redirect(
-      `${request.nextUrl.origin}/connect?error=access_denied`
-    );
+    return NextResponse.redirect(`${request.nextUrl.origin}/connect?error=access_denied`);
   }
 
   if (!code) {
-    return NextResponse.redirect(
-      `${request.nextUrl.origin}/connect?error=no_code`
-    );
+    return NextResponse.redirect(`${request.nextUrl.origin}/connect?error=no_code`);
   }
 
   try {
@@ -41,9 +37,7 @@ export async function GET(request: NextRequest) {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.redirect(
-        `${request.nextUrl.origin}/login?error=not_authenticated`
-      );
+      return NextResponse.redirect(`${request.nextUrl.origin}/login?error=not_authenticated`);
     }
 
     // Check if account already exists
@@ -62,9 +56,7 @@ export async function GET(request: NextRequest) {
           account_name: userInfo.data.email || 'Google Account',
           access_token: tokens.access_token || '',
           refresh_token: tokens.refresh_token || null,
-          token_expires_at: tokens.expiry_date
-            ? new Date(tokens.expiry_date).toISOString()
-            : null,
+          token_expires_at: tokens.expiry_date ? new Date(tokens.expiry_date).toISOString() : null,
           is_active: true,
           updated_at: new Date().toISOString(),
         })
@@ -77,20 +69,14 @@ export async function GET(request: NextRequest) {
         account_name: userInfo.data.email || 'Google Account',
         access_token: tokens.access_token || '',
         refresh_token: tokens.refresh_token || null,
-        token_expires_at: tokens.expiry_date
-          ? new Date(tokens.expiry_date).toISOString()
-          : null,
+        token_expires_at: tokens.expiry_date ? new Date(tokens.expiry_date).toISOString() : null,
         is_active: true,
       });
     }
 
-    return NextResponse.redirect(
-      `${request.nextUrl.origin}/connect?success=true`
-    );
+    return NextResponse.redirect(`${request.nextUrl.origin}/connect?success=true`);
   } catch (error) {
     console.error('Google Sheets OAuth callback error:', error);
-    return NextResponse.redirect(
-      `${request.nextUrl.origin}/connect?error=auth_failed`
-    );
+    return NextResponse.redirect(`${request.nextUrl.origin}/connect?error=auth_failed`);
   }
 }

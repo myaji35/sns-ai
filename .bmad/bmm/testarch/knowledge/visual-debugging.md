@@ -183,12 +183,12 @@ export const test = base.extend<DebugFixture>({
     const networkRequests: Array<{ url: string; status: number; method: string }> = [];
 
     // Capture console messages
-    page.on('console', (msg) => {
+    page.on('console', msg => {
       consoleLogs.push(`[${msg.type()}] ${msg.text()}`);
     });
 
     // Capture network requests
-    page.on('request', (request) => {
+    page.on('request', request => {
       networkRequests.push({
         url: request.url(),
         method: request.method(),
@@ -196,8 +196,8 @@ export const test = base.extend<DebugFixture>({
       });
     });
 
-    page.on('response', (response) => {
-      const req = networkRequests.find((r) => r.url === response.url());
+    page.on('response', response => {
+      const req = networkRequests.find(r => r.url === response.url());
       if (req) req.status = response.status();
     });
 
@@ -215,7 +215,11 @@ export const test = base.extend<DebugFixture>({
       fs.writeFileSync(path.join(artifactDir, 'console.log'), consoleLogs.join('\n'), 'utf-8');
 
       // Save network summary
-      fs.writeFileSync(path.join(artifactDir, 'network.json'), JSON.stringify(networkRequests, null, 2), 'utf-8');
+      fs.writeFileSync(
+        path.join(artifactDir, 'network.json'),
+        JSON.stringify(networkRequests, null, 2),
+        'utf-8'
+      );
 
       console.log(`Debug artifacts saved to: ${artifactDir}`);
     }
@@ -229,7 +233,10 @@ export const test = base.extend<DebugFixture>({
 // tests/e2e/payment-with-debug.spec.ts
 import { test, expect } from '../support/fixtures/debug-fixture';
 
-test('payment flow captures debug artifacts on failure', async ({ page, captureDebugArtifacts }) => {
+test('payment flow captures debug artifacts on failure', async ({
+  page,
+  captureDebugArtifacts,
+}) => {
   await page.goto('/checkout');
 
   // Test will automatically capture console + network on failure
@@ -307,7 +314,7 @@ export const test = base.extend<A11yFixture>({
       // Attach results to test report (visible in trace viewer)
       if (results.violations.length > 0) {
         console.log(`Found ${results.violations.length} accessibility violations:`);
-        results.violations.forEach((violation) => {
+        results.violations.forEach(violation => {
           console.log(`- [${violation.impact}] ${violation.id}: ${violation.description}`);
           console.log(`  Help: ${violation.helpUrl}`);
         });
@@ -356,10 +363,10 @@ import 'cypress-axe';
 
 Cypress.Commands.add('checkA11y', (context = null, options = {}) => {
   cy.injectAxe(); // Inject axe-core
-  cy.checkA11y(context, options, (violations) => {
+  cy.checkA11y(context, options, violations => {
     if (violations.length) {
       cy.task('log', `Found ${violations.length} accessibility violations`);
-      violations.forEach((violation) => {
+      violations.forEach(violation => {
         cy.task('log', `- [${violation.impact}] ${violation.id}: ${violation.description}`);
       });
     }

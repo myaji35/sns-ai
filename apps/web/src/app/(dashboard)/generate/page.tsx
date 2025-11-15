@@ -24,7 +24,9 @@ export default function GeneratePage() {
   useEffect(() => {
     const loadData = async () => {
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
       if (!user) {
         router.push('/login');
@@ -114,9 +116,7 @@ export default function GeneratePage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">AI 콘텐츠 생성</h1>
-          <p className="text-gray-600">
-            주제를 입력하고 AI가 블로그 포스트를 자동으로 생성합니다
-          </p>
+          <p className="text-gray-600">주제를 입력하고 AI가 블로그 포스트를 자동으로 생성합니다</p>
         </div>
 
         {/* Input Section */}
@@ -130,7 +130,7 @@ export default function GeneratePage() {
                 id="topic"
                 type="text"
                 value={topic}
-                onChange={(e) => setTopic(e.target.value)}
+                onChange={e => setTopic(e.target.value)}
                 placeholder="예: AI를 활용한 마케팅 자동화 방법"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
               />
@@ -143,7 +143,7 @@ export default function GeneratePage() {
               <select
                 id="provider"
                 value={provider}
-                onChange={(e) => setProvider(e.target.value as any)}
+                onChange={e => setProvider(e.target.value as any)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
               >
                 <option value="all">모든 모델 (비교용)</option>
@@ -158,7 +158,10 @@ export default function GeneratePage() {
                 <p className="text-sm text-blue-800">
                   <strong>업종:</strong> {profile.industry} |
                   {profile.tone_and_manner && (
-                    <span> <strong>톤:</strong> {JSON.parse(profile.tone_and_manner).join(', ')}</span>
+                    <span>
+                      {' '}
+                      <strong>톤:</strong> {JSON.parse(profile.tone_and_manner).join(', ')}
+                    </span>
                   )}
                 </p>
               </div>
@@ -178,8 +181,20 @@ export default function GeneratePage() {
               {isGenerating ? (
                 <span className="flex items-center justify-center gap-2">
                   <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                      fill="none"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    />
                   </svg>
                   콘텐츠 생성 중...
                 </span>
@@ -196,7 +211,10 @@ export default function GeneratePage() {
             <h2 className="text-2xl font-bold text-gray-900">생성된 콘텐츠</h2>
 
             {Object.entries(results).map(([provider, result]) => (
-              <div key={provider} className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+              <div
+                key={provider}
+                className="bg-white rounded-xl shadow-sm border border-gray-200 p-8"
+              >
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">
@@ -216,9 +234,7 @@ export default function GeneratePage() {
                     </div>
                   </div>
                   {result.usage && (
-                    <div className="text-sm text-gray-500">
-                      Tokens: {result.usage.total_tokens}
-                    </div>
+                    <div className="text-sm text-gray-500">Tokens: {result.usage.total_tokens}</div>
                   )}
                 </div>
 

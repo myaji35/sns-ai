@@ -7,10 +7,7 @@ export async function POST(request: NextRequest) {
     const { spreadsheetId, range = 'Sheet1!A:F' } = await request.json();
 
     if (!spreadsheetId) {
-      return NextResponse.json(
-        { error: 'Spreadsheet ID is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Spreadsheet ID is required' }, { status: 400 });
     }
 
     // Get current user
@@ -33,10 +30,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (!account) {
-      return NextResponse.json(
-        { error: 'Google Sheets not connected' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Google Sheets not connected' }, { status: 404 });
     }
 
     // Set up OAuth2 client
@@ -77,7 +71,7 @@ export async function POST(request: NextRequest) {
     }
 
     const headers = rows[0];
-    const data = rows.slice(1).map((row) => {
+    const data = rows.slice(1).map(row => {
       const obj: any = {};
       headers.forEach((header, index) => {
         obj[header] = row[index] || '';
@@ -101,9 +95,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    return NextResponse.json(
-      { error: 'Failed to read Google Sheets' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to read Google Sheets' }, { status: 500 });
   }
 }

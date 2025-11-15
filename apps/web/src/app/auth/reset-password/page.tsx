@@ -17,7 +17,7 @@ const resetPasswordSchema = z
       .regex(/[^A-Za-z0-9]/, '특수문자를 최소 1개 포함해야 합니다'),
     confirmPassword: z.string(),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine(data => data.password === data.confirmPassword, {
     message: '비밀번호가 일치하지 않습니다',
     path: ['confirmPassword'],
   });
@@ -47,7 +47,9 @@ export default function ResetPasswordPage() {
     // Check if user has a valid session (from the reset link)
     const checkSession = async () => {
       const supabase = createClient();
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
 
       if (session) {
         setIsValidToken(true);
@@ -190,8 +192,8 @@ export default function ResetPasswordPage() {
                         passwordStrength === '약함'
                           ? 'w-1/3 bg-red-500'
                           : passwordStrength === '보통'
-                          ? 'w-2/3 bg-yellow-500'
-                          : 'w-full bg-green-500'
+                            ? 'w-2/3 bg-yellow-500'
+                            : 'w-full bg-green-500'
                       }`}
                     />
                   </div>
@@ -200,8 +202,8 @@ export default function ResetPasswordPage() {
                       passwordStrength === '약함'
                         ? 'text-red-600'
                         : passwordStrength === '보통'
-                        ? 'text-yellow-600'
-                        : 'text-green-600'
+                          ? 'text-yellow-600'
+                          : 'text-green-600'
                     }`}
                   >
                     {passwordStrength}

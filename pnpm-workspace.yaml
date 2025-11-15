@@ -1,0 +1,6 @@
+# pnpm workspace configuration
+# Defines workspace packages for ContentFlow AI Monorepo
+
+packages:
+  - 'apps/*'
+  - 'packages/*'

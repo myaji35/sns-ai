@@ -3,13 +3,11 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function GET(request: NextRequest) {
   try {
     const clientId = process.env.INSTAGRAM_CLIENT_ID;
-    const redirectUri = process.env.INSTAGRAM_REDIRECT_URI || 'http://localhost:3001/api/auth/instagram/callback';
+    const redirectUri =
+      process.env.INSTAGRAM_REDIRECT_URI || 'http://localhost:3001/api/auth/instagram/callback';
 
     if (!clientId) {
-      return NextResponse.json(
-        { error: 'Instagram client ID not configured' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: 'Instagram client ID not configured' }, { status: 500 });
     }
 
     // Instagram uses Facebook OAuth

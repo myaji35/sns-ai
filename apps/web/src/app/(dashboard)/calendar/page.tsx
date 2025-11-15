@@ -32,7 +32,9 @@ export default function CalendarPage() {
 
     const loadData = async () => {
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
       if (!user) {
         router.push('/login');
@@ -120,8 +122,18 @@ export default function CalendarPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-12 text-center">
             <div className="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <svg className="w-10 h-10 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              <svg
+                className="w-10 h-10 text-indigo-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
               </svg>
             </div>
             <h2 className="text-2xl font-bold text-gray-900 mb-3">Google Sheets 연결 필요</h2>
@@ -168,9 +180,7 @@ export default function CalendarPage() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">콘텐츠 캘린더</h1>
-          <p className="text-gray-600">
-            Google Sheets에서 콘텐츠 기획 시트를 선택하세요
-          </p>
+          <p className="text-gray-600">Google Sheets에서 콘텐츠 기획 시트를 선택하세요</p>
         </div>
 
         {successMessage && (
@@ -187,17 +197,25 @@ export default function CalendarPage() {
 
         {sheets.length === 0 ? (
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
-            <svg className="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            <svg
+              className="w-16 h-16 mx-auto mb-4 text-gray-300"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
             </svg>
             <p className="text-gray-600 mb-4">Google Sheets를 찾을 수 없습니다</p>
-            <p className="text-sm text-gray-500">
-              Google Drive에 스프레드시트를 만들어주세요
-            </p>
+            <p className="text-sm text-gray-500">Google Drive에 스프레드시트를 만들어주세요</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {sheets.map((sheet) => (
+            {sheets.map(sheet => (
               <div
                 key={sheet.id}
                 className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md hover:border-indigo-300 transition cursor-pointer"
@@ -208,15 +226,18 @@ export default function CalendarPage() {
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
                     <svg className="w-7 h-7" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-                      <path fill="#43A047" d="M37,45H11c-1.657,0-3-1.343-3-3V6c0-1.657,1.343-3,3-3h19l10,10v29C40,43.657,38.657,45,37,45z"/>
-                      <path fill="#C8E6C9" d="M40 13L30 13 30 3z"/>
-                      <path fill="#2E7D32" d="M30 13L40 23 40 13z"/>
-                      <rect x="20" y="16" fill="#E8F5E9" width="2" height="5"/>
-                      <rect x="24" y="16" fill="#43A047" width="2" height="5"/>
-                      <rect x="28" y="16" fill="#43A047" width="2" height="5"/>
-                      <rect x="20" y="28" fill="#E8F5E9" width="2" height="5"/>
-                      <rect x="24" y="28" fill="#43A047" width="2" height="5"/>
-                      <rect x="28" y="28" fill="#43A047" width="2" height="5"/>
+                      <path
+                        fill="#43A047"
+                        d="M37,45H11c-1.657,0-3-1.343-3-3V6c0-1.657,1.343-3,3-3h19l10,10v29C40,43.657,38.657,45,37,45z"
+                      />
+                      <path fill="#C8E6C9" d="M40 13L30 13 30 3z" />
+                      <path fill="#2E7D32" d="M30 13L40 23 40 13z" />
+                      <rect x="20" y="16" fill="#E8F5E9" width="2" height="5" />
+                      <rect x="24" y="16" fill="#43A047" width="2" height="5" />
+                      <rect x="28" y="16" fill="#43A047" width="2" height="5" />
+                      <rect x="20" y="28" fill="#E8F5E9" width="2" height="5" />
+                      <rect x="24" y="28" fill="#43A047" width="2" height="5" />
+                      <rect x="28" y="28" fill="#43A047" width="2" height="5" />
                     </svg>
                   </div>
 
@@ -232,7 +253,7 @@ export default function CalendarPage() {
                         href={sheet.webViewLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
+                        onClick={e => e.stopPropagation()}
                         className="text-sm text-indigo-600 hover:text-indigo-700 font-medium"
                       >
                         Google Sheets에서 열기 →

@@ -9,6 +9,7 @@
 ## 1. Development Servers Status
 
 ### Frontend (Next.js 15.0.3)
+
 - **Status**: ✅ Running
 - **URL**: http://localhost:3001
 - **Performance**: Ready in 2.3s
@@ -16,6 +17,7 @@
 - **Environment**: .env.local loaded
 
 ### Backend (NestJS 10.4.20)
+
 - **Status**: ✅ Running
 - **URL**: http://localhost:3002
 - **API Docs**: http://localhost:3002/api (Swagger)
@@ -27,6 +29,7 @@
 ## 2. Build Tests
 
 ### Next.js Production Build
+
 - **Status**: ✅ SUCCESS
 - **Build Time**: ~30s
 - **Bundle Size**:
@@ -41,10 +44,12 @@
   - `/auth/callback` (100 kB) - OAuth callback
 
 **Warnings**:
+
 - ⚠️ Supabase Realtime uses Node.js APIs not supported in Edge Runtime
 - Impact: Minor, only affects middleware (still functional)
 
 ### NestJS Production Build
+
 - **Status**: ✅ SUCCESS
 - **Output**: `dist/` directory
 - **TypeScript Compilation**: No errors
@@ -54,6 +59,7 @@
 ## 3. Implemented Features
 
 ### Epic 1: Foundation (100% Complete)
+
 - ✅ Story 1.1: Monorepo 초기화 (Turborepo + pnpm)
 - ✅ Story 1.2: Next.js Frontend 초기화
 - ✅ Story 1.3: NestJS Workflow Engine 초기화
@@ -61,6 +67,7 @@
 - ✅ Story 1.5: CI/CD 파이프라인 설정 (GitHub Actions)
 
 ### Epic 2: User Authentication (100% Complete)
+
 - ✅ Story 2.1: Supabase Auth 통합 (이메일/비밀번호)
 - ✅ Story 2.2: Google 소셜 로그인
 - ✅ Story 2.3: 회원가입 폼 구현
@@ -71,12 +78,14 @@
 - ✅ Story 2.8: 비밀번호 재설정
 
 ### Epic 3: Content Planning Hub (진행 중 - 50%)
+
 - ✅ Story 3.1: Google Sheets OAuth 연동
 - ✅ Story 3.2: Google Sheets 목록 조회 UI
 - ⏳ Story 3.3: 콘텐츠 캘린더 테이블 (Pending)
 - ⏳ Story 3.4: Sheets 데이터 import 기능 (Pending)
 
 ### Epic 4: AI Content Generation (100% Complete - NEW!)
+
 - ✅ Story 4.1: LLM API 키 설정 UI
 - ✅ Story 4.2: 콘텐츠 생성 프롬프트 엔진
 - ✅ Story 4.3: 다중 LLM 콘텐츠 생성 (ChatGPT, Claude, Gemini)
@@ -87,6 +96,7 @@
 ## 4. Page-by-Page Testing
 
 ### Landing Page (`/`)
+
 - **Status**: ✅ Working
 - **Features**:
   - Gradient background (indigo to blue)
@@ -96,6 +106,7 @@
 - **Responsive**: Yes
 
 ### Login Page (`/login`)
+
 - **Status**: ✅ Working
 - **Features**:
   - Email/Password form with validation (Zod)
@@ -109,6 +120,7 @@
 - **OAuth**: Google integration ready (needs Supabase config)
 
 ### Signup Page (`/signup`)
+
 - **Status**: ✅ Working
 - **Features**:
   - Email/Password/Confirm Password
@@ -123,6 +135,7 @@
 - **Performance**: 190 kB First Load
 
 ### Onboarding Page (`/onboarding`)
+
 - **Status**: ✅ Working
 - **Features**:
   - 3-step progressive form
@@ -138,6 +151,7 @@
 - **UX**: Smooth navigation, back/next buttons
 
 ### Dashboard Page (`/dashboard`)
+
 - **Status**: ✅ Working
 - **Features**:
   - Header with logo + user info + logout button
@@ -150,6 +164,7 @@
 - **Performance**: 155 kB First Load
 
 ### OAuth Callback (`/auth/callback`)
+
 - **Status**: ✅ Working
 - **Features**:
   - Exchanges authorization code for session
@@ -158,6 +173,7 @@
 - **Type**: Server Route Handler
 
 ### Profile Edit Page (`/profile`)
+
 - **Status**: ✅ Working
 - **Features**:
   - Edit company name, industry, brand description
@@ -170,6 +186,7 @@
 - **Performance**: ~165 kB estimated
 
 ### Forgot Password Page (`/forgot-password`)
+
 - **Status**: ✅ Working
 - **Features**:
   - Email input with validation
@@ -180,6 +197,7 @@
 - **Performance**: ~160 kB estimated
 
 ### Reset Password Page (`/auth/reset-password`)
+
 - **Status**: ✅ Working
 - **Features**:
   - Validates reset token from email
@@ -191,6 +209,7 @@
 - **Performance**: ~175 kB estimated
 
 ### Connect Accounts Page (`/connect`)
+
 - **Status**: ✅ Working (NEW!)
 - **Features**:
   - Google Sheets OAuth 연동
@@ -202,6 +221,7 @@
 - **Performance**: ~180 kB estimated
 
 ### Content Calendar Page (`/calendar`)
+
 - **Status**: ✅ Working (NEW!)
 - **Features**:
   - Google Sheets 연결 상태 확인
@@ -213,6 +233,7 @@
 - **Performance**: ~190 kB estimated
 
 ### AI Settings Page (`/settings`) - EPIC 4 (NEW!)
+
 - **Status**: ✅ Working
 - **Features**:
   - OpenAI, Anthropic, Google AI API 키 설정
@@ -224,6 +245,7 @@
 - **Performance**: ~185 kB estimated
 
 ### AI Content Generate Page (`/generate`) - EPIC 4 (NEW!)
+
 - **Status**: ✅ Working
 - **Features**:
   - 주제 입력 폼
@@ -245,6 +267,7 @@
 ## 5. Authentication Flow Testing
 
 ### Email/Password Signup Flow
+
 1. User visits `/signup` ✅
 2. Fills form with valid data ✅
 3. Password strength indicator updates ✅
@@ -253,6 +276,7 @@
 6. Redirect to `/dashboard` ✅
 
 ### Google OAuth Flow (Ready for testing)
+
 1. User clicks "Google로 계속하기" ✅
 2. Redirects to Google OAuth consent ⏳ (Needs Supabase config)
 3. Google redirects to `/auth/callback` ✅
@@ -261,22 +285,26 @@
 6. Redirect to `/dashboard` ✅
 
 ### Login Flow
+
 1. User visits `/login` ✅
 2. Enters email/password ✅
 3. Supabase authenticates ✅
 4. Redirect to `/dashboard` ✅
 
 ### Logout Flow
+
 1. User clicks "로그아웃" in header ✅
 2. Supabase session cleared ✅
 3. Redirect to `/login` ✅
 
 ### Protected Routes
+
 - ✅ Middleware checks authentication
 - ✅ Unauthenticated users → `/login`
 - ✅ Authenticated users → Allow access
 
 ### Profile Edit Flow
+
 1. User clicks "프로필 편집" in dashboard header ✅
 2. Navigates to `/profile` ✅
 3. Form pre-filled with existing profile data ✅
@@ -285,6 +313,7 @@
 6. Success message → Auto-redirect to dashboard after 2s ✅
 
 ### Password Reset Flow
+
 1. User clicks "비밀번호를 잊으셨나요?" on login page ✅
 2. Navigates to `/forgot-password` ✅
 3. Enters email address ✅
@@ -297,6 +326,7 @@
 10. Success → Redirects to login ✅
 
 ### Google Sheets Connection Flow (NEW!)
+
 1. User clicks "Google Sheets 연결하기" in dashboard or connect page ✅
 2. Redirects to `/api/auth/google-sheets` ✅
 3. API generates Google OAuth URL with scopes (sheets.readonly, drive.readonly) ✅
@@ -310,6 +340,7 @@
 11. Success message displayed ✅
 
 ### Content Calendar Flow (NEW!)
+
 1. User clicks "캘린더 열기" in dashboard ✅
 2. Navigates to `/calendar` ✅
 3. Check if Google Sheets is connected ✅
@@ -320,6 +351,7 @@
 8. User can open sheet in Google Sheets (new tab) ✅
 
 ### AI Content Generation Flow (EPIC 4 - NEW!)
+
 1. User clicks "AI 설정" in dashboard header ✅
 2. Navigates to `/settings` ✅
 3. User enters API keys for OpenAI, Anthropic, Google ✅
@@ -340,7 +372,9 @@
 ## 6. Database Schema
 
 ### Tables Created
+
 **Migration 1**: `20251114000000_initial_schema.sql`
+
 - ✅ `public.profiles` - User profiles (id, email, full_name, company_name, industry)
 - ✅ `public.connected_accounts` - OAuth connections
 - ✅ `public.content_calendar` - Content planning
@@ -349,10 +383,12 @@
 - ✅ `public.usage_metrics` - Billing data
 
 **Migration 2**: `20251114000001_add_profile_fields.sql`
+
 - ✅ Added `brand_description` column (TEXT) - Brand description (max 200 chars)
 - ✅ Added `tone_and_manner` column (JSONB) - Brand tone array
 
 **Migration 3**: `20251114000002_add_llm_api_keys.sql` (EPIC 4)
+
 - ✅ `public.llm_api_keys` table - LLM API keys storage
   - Columns: id, user_id, provider, api_key (encrypted), is_active
   - Providers: 'openai', 'anthropic', 'google'
@@ -360,11 +396,13 @@
   - Unique constraint on (user_id, provider)
 
 ### Row Level Security (RLS)
+
 - ✅ All tables have RLS enabled
 - ✅ Policies: `auth.uid() = user_id`
 - ✅ Users can only access their own data
 
 ### Indexes
+
 - ✅ Performance indexes on user_id, status, created_at
 - ✅ Composite indexes for queries
 
@@ -373,6 +411,7 @@
 ## 7. Technical Stack Verification
 
 ### Frontend
+
 - ✅ Next.js 15.0.3 (App Router)
 - ✅ React 19.2.0
 - ✅ TypeScript 5.9.3
@@ -382,12 +421,14 @@
 - ✅ Zod 4.1.12
 
 ### Backend
+
 - ✅ NestJS 10.4.20
 - ✅ TypeScript 5.9.3
 - ✅ Swagger API Docs
 - ✅ @nestjs/config for env management
 
 ### Infrastructure
+
 - ✅ Turborepo monorepo
 - ✅ pnpm 9.15.0 workspace
 - ✅ GitHub Actions CI/CD workflow
@@ -397,6 +438,7 @@
 ## 8. Performance Metrics
 
 ### Bundle Sizes
+
 - Landing Page: **100 kB**
 - Login: **189 kB**
 - Signup: **190 kB**
@@ -409,12 +451,14 @@
 **Verdict**: ✅ All pages under 200 kB - Excellent
 
 ### Build Times
+
 - Next.js: **~30 seconds**
 - NestJS: **~5 seconds**
 
 **Verdict**: ✅ Fast builds
 
 ### Hot Reload
+
 - Next.js: **< 3 seconds**
 - NestJS: **< 2 seconds**
 
@@ -425,11 +469,13 @@
 ## 9. Known Issues & Warnings
 
 ### 1. Supabase Edge Runtime Warning ⚠️
+
 - **Issue**: Supabase Realtime uses Node.js APIs in middleware
 - **Impact**: Minor warning, functionality not affected
 - **Fix**: Can be ignored or use Node.js runtime for middleware
 
 ### 2. Environment Variables ⏳
+
 - **Issue**: `.env.local` has placeholder values
 - **Action Required**:
   - Get Supabase URL and Anon Key
@@ -437,6 +483,7 @@
 - **Workaround**: Use Supabase Cloud or `supabase start`
 
 ### 3. Google OAuth Pending ⏳
+
 - **Issue**: Google Provider not configured in Supabase
 - **Action Required**:
   - Supabase Dashboard → Authentication → Providers
@@ -473,12 +520,14 @@
 ## 12. Responsive Design
 
 ### Breakpoints Tested
+
 - ✅ Mobile (375px) - iPhone SE
 - ✅ Tablet (768px) - iPad
 - ✅ Desktop (1920px) - Full HD
 - ✅ XL (2560px) - 4K (Google Ads sidebar shows)
 
 ### Components
+
 - ✅ Forms: Single column on mobile, centered
 - ✅ Dashboard: Grid adapts (1 col → 3 cols)
 - ✅ Header: Responsive text sizing
@@ -489,6 +538,7 @@
 ## 13. Next Steps
 
 ### Immediate (To unlock full testing)
+
 1. **Start Supabase**:
    ```bash
    supabase start
@@ -498,9 +548,11 @@
 4. **Test full authentication flow**
 
 ### Short-term (Start Epic 3)
+
 - Epic 3: Content Planning Hub
 
 ### Medium-term (Epic 3 implementation)
+
 - Google Sheets integration
 - AI content generation
 - Content review workflow
@@ -512,6 +564,7 @@
 **Overall Status**: ✅ **EXCELLENT - Epic 4 Complete! AI-Powered Platform Ready!**
 
 ### Strengths
+
 - ✅ Clean architecture (Monorepo)
 - ✅ Modern tech stack (Next.js 15, React 19)
 - ✅ Production-ready builds
@@ -526,6 +579,7 @@
 - ✅ Multi-tenant data isolation
 
 ### What's New in This Update (Epic 4 - AI Generation!)
+
 1. **AI Settings Page** (`/settings`)
    - OpenAI, Anthropic, Google AI API key management
    - Secure encrypted storage in database
@@ -554,6 +608,7 @@
    - Multi-provider support
 
 ### Technical Implementation - Epic 4
+
 - **Multi-LLM Architecture**:
   - Parallel API calls for comparison
   - Individual error handling per provider
@@ -575,6 +630,7 @@
   - RLS on API keys table
 
 ### Recommendations
+
 1. **Immediate**: Get LLM API keys (OpenAI, Anthropic, Google)
 2. Configure Google OAuth redirect URIs in Google Cloud Console
 3. Complete Supabase setup for full functionality

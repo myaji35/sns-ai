@@ -68,7 +68,7 @@ export default function ContentPage() {
     }
   };
 
-  const filteredContents = contents.filter((item) => {
+  const filteredContents = contents.filter(item => {
     if (filterStatus !== 'all' && item.status !== filterStatus) return false;
     if (filterPlatform !== 'all' && item.platform !== filterPlatform) return false;
     return true;
@@ -88,7 +88,9 @@ export default function ContentPage() {
       failed: '실패',
     };
     return (
-      <span className={`px-3 py-1 rounded-full text-xs font-medium ${badges[status as keyof typeof badges]}`}>
+      <span
+        className={`px-3 py-1 rounded-full text-xs font-medium ${badges[status as keyof typeof badges]}`}
+      >
         {labels[status as keyof typeof labels]}
       </span>
     );
@@ -148,9 +150,7 @@ export default function ContentPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">콘텐츠 관리</h1>
-          <p className="text-gray-600">
-            import된 콘텐츠를 관리하고 발행 일정을 설정하세요
-          </p>
+          <p className="text-gray-600">import된 콘텐츠를 관리하고 발행 일정을 설정하세요</p>
         </div>
 
         {/* Filters */}
@@ -160,7 +160,7 @@ export default function ContentPage() {
               <label className="text-sm font-medium text-gray-700">상태:</label>
               <select
                 value={filterStatus}
-                onChange={(e) => setFilterStatus(e.target.value)}
+                onChange={e => setFilterStatus(e.target.value)}
                 className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm"
               >
                 <option value="all">전체</option>
@@ -175,7 +175,7 @@ export default function ContentPage() {
               <label className="text-sm font-medium text-gray-700">플랫폼:</label>
               <select
                 value={filterPlatform}
-                onChange={(e) => setFilterPlatform(e.target.value)}
+                onChange={e => setFilterPlatform(e.target.value)}
                 className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm"
               >
                 <option value="all">전체</option>
@@ -234,7 +234,7 @@ export default function ContentPage() {
           </div>
         ) : (
           <div className="space-y-4">
-            {filteredContents.map((item) => (
+            {filteredContents.map(item => (
               <div
                 key={item.id}
                 className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition cursor-pointer"

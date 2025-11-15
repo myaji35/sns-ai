@@ -6,10 +6,7 @@ export async function POST(request: NextRequest) {
     const { contentId, platform } = await request.json();
 
     if (!contentId) {
-      return NextResponse.json(
-        { error: 'Content ID is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Content ID is required' }, { status: 400 });
     }
 
     // Get current user
@@ -74,10 +71,7 @@ export async function POST(request: NextRequest) {
       .eq('id', contentId);
 
     if (updateError) {
-      return NextResponse.json(
-        { error: 'Failed to update content status' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: 'Failed to update content status' }, { status: 500 });
     }
 
     return NextResponse.json({
@@ -87,10 +81,7 @@ export async function POST(request: NextRequest) {
     });
   } catch (error: any) {
     console.error('Publish error:', error);
-    return NextResponse.json(
-      { error: 'Failed to publish content' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to publish content' }, { status: 500 });
   }
 }
 
