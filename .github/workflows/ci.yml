@@ -180,15 +180,46 @@ jobs:
   notify:
     name: Notify Deployment Status
     runs-on: ubuntu-latest
-    needs: [deploy-frontend, deploy-backend]
+    needs: [lint-and-typecheck, test, build, deploy-frontend, deploy-backend]
     if: always() && github.ref == 'refs/heads/main' && github.event_name == 'push'
 
     steps:
-      - name: Send notification
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Prepare notification message
+        id: prepare
         run: |
+          STATUS=""
           if [ "${{ needs.deploy-frontend.result }}" == "success" ] && [ "${{ needs.deploy-backend.result }}" == "success" ]; then
-            echo "✅ Deployment successful!"
+            STATUS="✅ Deployment successful!"
+            COLOR="28a745"
           else
-            echo "❌ Deployment failed!"
+            STATUS="❌ Deployment failed!"
+            COLOR="cb2431"
+          fi
+          echo "status=$STATUS" >> $GITHUB_OUTPUT
+          echo "color=$COLOR" >> $GITHUB_OUTPUT
+
+      - name: Send Slack notification (optional)
+        uses: 8398a7/action-slack@v3
+        if: env.SLACK_WEBHOOK_URL != null
+        with:
+          status: ${{ job.status }}
+          text: |
+            ContentFlow AI Deployment Status
+            Repository: ${{ github.repository }}
+            Commit: ${{ github.sha }}
+            Message: ${{ steps.prepare.outputs.status }}
+          webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        continue-on-error: true
+
+      - name: Check final status
+        run: |
+          echo "${{ steps.prepare.outputs.status }}"
+          if [ "${{ needs.deploy-frontend.result }}" != "success" ] || [ "${{ needs.deploy-backend.result }}" != "success" ]; then
+            echo "Deployment had failures"
             exit 1
           fi
