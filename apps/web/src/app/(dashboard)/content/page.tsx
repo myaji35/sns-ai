@@ -32,6 +32,58 @@ export default function ContentPage() {
   const router = useRouter();
   const supabase = createClient();
 
+  // Sample data for demo
+  const SAMPLE_CONTENTS: GeneratedContent[] = [
+    {
+      id: '1',
+      type: 'blog_post',
+      main_topic: '맛있는 베이커리 신메뉴 소개',
+      content: '안녕하세요, 맛있는 베이커리입니다! 이번 주 새로운 시즌 메뉴를 선보입니다. 따뜻한 봄을 맞아 딸기 크림 크루아상과 제주 말차 케이크를 출시했습니다. 신선한 제철 딸기를 듬뿍 사용한 크림 크루아상은 달콤하면서도 상큼한 맛이 일품입니다...',
+      title: '봄 시즌 신메뉴 - 딸기 크림 크루아상 & 제주 말차 케이크',
+      platform: 'instagram',
+      status: 'approved',
+      quality_score: 92,
+      created_at: '2025-03-15T10:30:00Z',
+      metadata: { wordCount: 245, readingTime: 2 }
+    },
+    {
+      id: '2',
+      type: 'social_media',
+      main_topic: '스마트 카페 이벤트',
+      content: '☕️ 봄맞이 특별 이벤트! 🌸\n\n스마트 카페에서 봄을 맞아 특별한 이벤트를 준비했습니다!\n\n📍 기간: 3월 15일 - 3월 31일\n🎁 혜택: 아메리카노 2잔 주문 시 1잔 무료!\n💝 추가: 신규 회원 가입 시 케이크 10% 할인\n\n#스마트카페 #봄이벤트 #커피',
+      title: '봄맞이 특별 이벤트',
+      platform: 'instagram',
+      status: 'published',
+      quality_score: 88,
+      created_at: '2025-03-14T15:20:00Z',
+      metadata: { wordCount: 85, readingTime: 1 }
+    },
+    {
+      id: '3',
+      type: 'blog_post',
+      main_topic: '테크 스타트업 채용 공고',
+      content: '테크 스타트업이 새로운 팀원을 찾습니다! 우리는 혁신적인 기술로 세상을 변화시키는 것을 목표로 하는 스타트업입니다. 현재 프론트엔드 개발자, 백엔드 개발자, UI/UX 디자이너를 모집하고 있습니다. 자유로운 근무 환경과 경쟁력 있는 연봉, 그리고 성장할 수 있는 기회를 제공합니다...',
+      title: '함께 성장할 개발자를 찾습니다',
+      platform: 'blog',
+      status: 'review',
+      quality_score: 85,
+      created_at: '2025-03-13T09:15:00Z',
+      metadata: { wordCount: 320, readingTime: 3 }
+    },
+    {
+      id: '4',
+      type: 'social_media',
+      main_topic: '패션 부티크 신상 소개',
+      content: '✨ NEW ARRIVAL ✨\n\n봄 신상이 입고되었습니다! 🌸\n트렌디한 디자인과 편안한 착용감을 동시에!\n\n지금 매장 방문하시면 신규 회원 20% 할인 혜택!\n\n#패션부티크 #신상 #봄패션 #데일리룩',
+      title: '봄 신상 컬렉션',
+      platform: 'instagram',
+      status: 'draft',
+      quality_score: 78,
+      created_at: '2025-03-12T14:45:00Z',
+      metadata: { wordCount: 52, readingTime: 1 }
+    }
+  ];
+
   useEffect(() => {
     loadContents();
   }, [filter]);
@@ -39,27 +91,14 @@ export default function ContentPage() {
   const loadContents = async () => {
     setLoading(true);
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        router.push('/login');
-        return;
-      }
-
-      let query = supabase
-        .from('generated_contents')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
+      // Demo mode: Use sample data instead of fetching from database
+      let filteredContents = SAMPLE_CONTENTS;
 
       if (filter !== 'all') {
-        query = query.eq('type', filter);
+        filteredContents = SAMPLE_CONTENTS.filter(c => c.type === filter);
       }
 
-      const { data, error } = await query;
-
-      if (!error && data) {
-        setContents(data);
-      }
+      setContents(filteredContents);
     } catch (error) {
       console.error('콘텐츠 로드 오류:', error);
     } finally {
@@ -69,16 +108,10 @@ export default function ContentPage() {
 
   const handleStatusChange = async (contentId: string, newStatus: string) => {
     try {
-      const { error } = await supabase
-        .from('generated_contents')
-        .update({ status: newStatus })
-        .eq('id', contentId);
-
-      if (!error) {
-        setContents(contents.map(c =>
-          c.id === contentId ? { ...c, status: newStatus } : c
-        ));
-      }
+      // Demo mode: Update status in local state
+      setContents(contents.map(c =>
+        c.id === contentId ? { ...c, status: newStatus } : c
+      ));
     } catch (error) {
       console.error('상태 변경 오류:', error);
     }
@@ -90,14 +123,8 @@ export default function ContentPage() {
     }
 
     try {
-      const { error } = await supabase
-        .from('generated_contents')
-        .delete()
-        .eq('id', contentId);
-
-      if (!error) {
-        setContents(contents.filter(c => c.id !== contentId));
-      }
+      // Demo mode: Remove from local state
+      setContents(contents.filter(c => c.id !== contentId));
     } catch (error) {
       console.error('삭제 오류:', error);
     }
