@@ -101,21 +101,21 @@ development_status:
   epic-5-retrospective: optional
 
   # Epic 6: 멀티 채널 배포 (Multi-Channel Distribution) - 14 stories
-  epic-6: backlog
-  6-1-instagram-account-oauth-integration: backlog
-  6-2-facebook-page-oauth-integration: backlog
-  6-3-naver-blog-oauth-integration: backlog
-  6-4-connected-accounts-management-ui: backlog
-  6-5-distribution-settings-modal-platform-selection-and-scheduling: backlog
-  6-6-instagram-auto-publish-image-and-caption: backlog
-  6-7-facebook-auto-publish-text-post: backlog
-  6-8-naver-blog-auto-publish-html-conversion: backlog
-  6-9-distribution-failure-retry-logic: backlog
-  6-10-distribution-status-monitoring-ui: backlog
+  epic-6: contexted
+  6-1-instagram-account-oauth-integration: done
+  6-2-facebook-page-oauth-integration: done
+  6-3-naver-blog-oauth-integration: done
+  6-4-connected-accounts-management-ui: done
+  6-5-distribution-settings-modal-platform-selection-and-scheduling: done
+  6-6-instagram-auto-publish-image-and-caption: done
+  6-7-facebook-auto-publish-text-post: done
+  6-8-naver-blog-auto-publish-html-conversion: done
+  6-9-distribution-failure-retry-logic: done
+  6-10-distribution-status-monitoring-ui: done
   6-11-distribution-completed-notification: backlog
   6-12-manual-redistribution-feature: backlog
   6-13-oauth-token-auto-renewal: backlog
-  6-14-distribution-job-logs-and-monitoring: backlog
+  6-14-distribution-job-logs-and-monitoring: done
   epic-6-retrospective: optional
 
   # Epic 7: 대시보드 및 사용량 관리 (Dashboard & Usage Management) - 10 stories
