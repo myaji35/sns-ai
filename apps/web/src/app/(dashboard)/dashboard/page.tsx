@@ -65,6 +65,8 @@ export default function DashboardPage() {
         setProfile({
           company_name: '데모 회사',
           industry: 'IT/Tech',
+          business_type: 'small_business',
+          business_number: '123-45-67890',
         });
       }
 
@@ -104,8 +106,33 @@ export default function DashboardPage() {
               <p className="text-sm font-medium text-gray-900">
                 {profile?.company_name || user?.email}
               </p>
-              <p className="text-xs text-gray-500">{profile?.industry}</p>
+              <div className="flex items-center gap-2 text-xs text-gray-500">
+                {profile?.industry && <span>{profile.industry}</span>}
+                {profile?.business_type && (
+                  <>
+                    <span>•</span>
+                    <span>
+                      {profile.business_type === 'individual' && '개인'}
+                      {profile.business_type === 'small_business' && '소상공인'}
+                      {profile.business_type === 'medium_business' && '중소기업'}
+                      {profile.business_type === 'enterprise' && '대기업'}
+                    </span>
+                  </>
+                )}
+                {profile?.business_number && (
+                  <>
+                    <span>•</span>
+                    <span>{profile.business_number}</span>
+                  </>
+                )}
+              </div>
             </div>
+            <button
+              onClick={() => router.push('/organization')}
+              className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition"
+            >
+              조직 관리
+            </button>
             <button
               onClick={() => router.push('/analytics')}
               className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition"
