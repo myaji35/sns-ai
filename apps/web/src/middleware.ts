@@ -1,8 +1,8 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/client';
 
-// 보호된 라우트 목록 (임시로 대시보드 제외 - 데모용)
-const protectedRoutes = ['/content', '/calendar', '/settings', '/profile-onboarding'];
+// 보호된 라우트 목록 (임시로 대시보드, 컨텐츠 관리 제외 - 데모용)
+const protectedRoutes = ['/calendar', '/settings', '/profile-onboarding'];
 
 // 공개 라우트 목록 (인증되지 않은 사용자도 접근 가능)
 const publicAuthRoutes = ['/login', '/signup', '/forgot-password', '/reset-password', '/logout', '/auth/v1/callback'];
@@ -53,8 +53,7 @@ export async function middleware(request: NextRequest) {
 // Middleware 적용 경로
 export const config = {
   matcher: [
-    // 보호된 라우트 (대시보드 임시 제외)
-    '/content/:path*',
+    // 보호된 라우트 (대시보드, 컨텐츠 관리 임시 제외)
     '/calendar/:path*',
     '/settings/:path*',
     '/profile/:path*',
