@@ -37,6 +37,8 @@ const errorMessageMap: Record<string, string> = {
   'access_denied': 'Google 계정 접근 권한이 거부되었습니다',
   'over_request_rate_limit': '너무 많은 요청입니다. 잠시 후 다시 시도해주세요',
   'invalid_grant': '올바른 링크가 아닙니다',
+  'User not found': '사용자를 찾을 수 없습니다',
+  'User already deleted': '이미 삭제된 계정입니다',
 };
 
 /**
@@ -384,6 +386,79 @@ export async function signInWithGoogle(): Promise<AuthResponse> {
       error: {
         code: 'oauth_error',
         message: '알 수 없는 오류가 발생했습니다. 다시 시도해주세요',
+      },
+    };
+  }
+}
+
+/**
+ * 계정 삭제
+ *
+ * 기능:
+ * - 현재 로그인한 사용자의 계정을 완전히 삭제
+ * - Supabase Auth에서 사용자 삭제 (auth.users)
+ * - 관련 데이터 자동 삭제 (RLS 정책에 따라 profiles 테이블 cascade)
+ * - Storage 파일 삭제는 백엔드 API에서 처리
+ *
+ * @returns AuthResponse
+ */
+export async function deleteAccount(): Promise<AuthResponse> {
+  try {
+    const supabase = createClient();
+
+    // 현재 사용자 확인
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return {
+        user: null,
+        session: null,
+        error: {
+          code: 'not_authenticated',
+          message: '세션이 만료되었습니다. 다시 로그인하세요',
+        },
+      };
+    }
+
+    // 백엔드 API로 계정 삭제 요청 (Storage 정리 + 로깅 포함)
+    const response = await fetch('/api/auth/delete-account', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ userId: user.id }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      return {
+        user: null,
+        session: null,
+        error: {
+          code: 'delete_failed',
+          message: errorData.message || '계정 삭제에 실패했습니다. 나중에 다시 시도해주세요',
+        },
+      };
+    }
+
+    // 로그아웃 (세션 정리)
+    await supabase.auth.signOut();
+
+    return {
+      user: null,
+      session: null,
+      error: null,
+    };
+  } catch (error) {
+    console.error('계정 삭제 중 오류:', error);
+    return {
+      user: null,
+      session: null,
+      error: {
+        code: 'network_error',
+        message: '연결 실패. 다시 시도해주세요',
       },
     };
   }

@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<story-context id="story-2.7-context" v="1.0">
+  <metadata>
+    <epicId>2</epicId>
+    <storyId>2.7</storyId>
+    <title>계정 삭제 기능</title>
+    <storyKey>2-7-account-deletion-feature</storyKey>
+    <status>ready-for-dev</status>
+    <generatedAt>2025-11-15</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/2-7-account-deletion-feature.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>등록된 사용자</asA>
+    <iWant>내 계정을 완전히 삭제할 수 있어</iWant>
+    <soThat>서비스에서 나가고 개인정보를 완전히 삭제할 수 있다</soThat>
+    <tasks>
+      <task n="1">프로필 페이지에 계정 삭제 버튼 추가</task>
+      <task n="2">계정 삭제 확인 모달 컴포넌트 (AccountDeletionModal.tsx)</task>
+      <task n="3">계정 삭제 API 함수 (lib/api/auth-api.ts 확장)</task>
+      <task n="4">계정 삭제 이메일 템플릿 (선택사항)</task>
+      <task n="5">백엔드 라우트 (/api/auth/delete-account) (선택사항)</task>
+      <task n="6">프로필 사진 삭제 함수 (Supabase Storage)</task>
+      <task n="7">데이터베이스 마이그레이션 (deleted_at 컬럼 추가) (선택사항)</task>
+      <task n="8">테스트 코드 작성</task>
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    <criterion id="AC1">
+      <title>계정 삭제 버튼</title>
+      <requirements>
+        - 프로필 페이지(/profile)에 계정 삭제 버튼 표시
+        - 버튼 위치: 프로필 정보 하단
+        - 버튼 색상: 위험(빨강색) 표시
+        - 설정 페이지(/settings)에도 계정 삭제 옵션 제공
+      </requirements>
+    </criterion>
+    <criterion id="AC2">
+      <title>삭제 확인 모달</title>
+      <requirements>
+        - 삭제 버튼 클릭 시 확인 모달 표시
+        - 경고 메시지: "계정을 삭제하면 모든 데이터가 삭제됩니다. 되돌릴 수 없습니다."
+        - 사용자 이메일 표시
+        - 실제 이메일 입력으로 재확인
+        - 이메일이 일치해야 삭제 버튼 활성화
+        - 취소 버튼
+      </requirements>
+    </criterion>
+    <criterion id="AC3">
+      <title>2단계 인증</title>
+      <requirements>
+        - 이메일 인증 링크 발송 (선택사항)
+        - 인증 링크 클릭 시 계정 삭제 처리
+        - 인증 링크는 24시간 유효
+        - 만료된 링크: 재전송 옵션 제공
+      </requirements>
+    </criterion>
+    <criterion id="AC4">
+      <title>데이터 삭제</title>
+      <requirements>
+        - Supabase auth.users 테이블에서 사용자 삭제
+        - profiles 테이블에서 사용자 정보 삭제
+        - Supabase Storage에서 프로필 사진 삭제
+        - 관련된 모든 데이터 삭제 (향후 콘텐츠, 설정 등)
+      </requirements>
+    </criterion>
+    <criterion id="AC5">
+      <title>데이터 보관 정책</title>
+      <requirements>
+        - 소프트 삭제 고려: deleted_at 타임스탬프 추가
+        - 복구 기능 검토 (선택사항)
+        - GDPR 규정 준수
+      </requirements>
+    </criterion>
+    <criterion id="AC6">
+      <title>에러 처리</title>
+      <requirements>
+        - 이미 삭제된 계정: "이미 삭제된 계정입니다"
+        - 삭제 실패: "계정 삭제에 실패했습니다. 나중에 다시 시도해주세요"
+        - 네트워크 에러: "연결 실패. 다시 시도해주세요"
+        - 인증 토큰 만료: "세션이 만료되었습니다. 다시 로그인하세요"
+      </requirements>
+    </criterion>
+    <criterion id="AC7">
+      <title>사용자 경험</title>
+      <requirements>
+        - 모바일 반응형 디자인
+        - 로딩 상태 표시
+        - 삭제 완료 후 로그인 페이지로 리다이렉트
+        - 성공 메시지: "계정이 삭제되었습니다"
+      </requirements>
+    </criterion>
+    <criterion id="AC8">
+      <title>보안</title>
+      <requirements>
+        - 비밀번호 입력으로 추가 보안 (선택사항)
+        - 계정 삭제 이력 로깅
+        - 민감한 작업이므로 HTTPS만 허용
+      </requirements>
+    </criterion>
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>ContentFlow AI - Technical Architecture</title>
+        <section>Supabase Auth, 데이터 삭제 정책</section>
+        <snippet>Supabase auth.users 삭제, RLS 정책, 데이터 격리. GDPR 준수</snippet>
+      </doc>
+      <doc>
+        <path>docs/ux-design-specification.md</path>
+        <title>UX Design Specification</title>
+        <section>위험한 작업 UI, 확인 모달, 에러 메시지</section>
+        <snippet>계정 삭제는 되돌릴 수 없는 작업. 충분한 경고와 2단계 확인 필수</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/2-6-profile-edit-page.md</path>
+        <title>Story 2.6 - 프로필 편집 페이지</title>
+        <section>프로필 페이지 구조</section>
+        <snippet>프로필 페이지에 계정 삭제 버튼 추가</snippet>
+      </doc>
+    </docs>
+
+    <code>
+      <artifact>
+        <path>apps/web/src/lib/api/auth-api.ts</path>
+        <kind>service</kind>
+        <symbol>signOut, getUser</symbol>
+        <reason>기존 로그아웃 함수 참고. deleteAccount 함수 추가</reason>
+      </artifact>
+      <artifact>
+        <path>apps/web/src/app/(auth)/logout/page.tsx</path>
+        <kind>page</kind>
+        <symbol>LogoutPage</symbol>
+        <reason>로그아웃 후 리다이렉트 패턴 참고</reason>
+      </artifact>
+      <artifact>
+        <path>apps/web/src/components</path>
+        <kind>directory</kind>
+        <reason>모달 컴포넌트 구조. AccountDeletionModal.tsx 생성</reason>
+      </artifact>
+      <artifact>
+        <path>apps/web/src/middleware.ts</path>
+        <kind>middleware</kind>
+        <symbol>protectedRoutes</symbol>
+        <reason>/profile 라우트 보호 확인. 인증된 사용자만 접근</reason>
+      </artifact>
+    </code>
+
+    <dependencies>
+      <ecosystem name="node">
+        <package name="react-hook-form" version="^7.x">폼 입력 (이메일 재확인)</package>
+        <package name="zod" version="^3.x">이메일 검증</package>
+        <package name="@supabase/supabase-js" version="^2.x">Supabase 클라이언트 (deleteUser)</package>
+        <package name="next" version="^15.x">라우팅 및 리다이렉트</package>
+        <package name="typescript" version="^5.x">TypeScript</package>
+        <package name="tailwindcss" version="^3.x">모달 및 버튼 스타일</package>
+      </ecosystem>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>
+      <type>security</type>
+      <description>계정 삭제는 HTTPS 연결에서만 허용. 민감한 작업</description>
+    </constraint>
+    <constraint>
+      <type>security</type>
+      <description>이메일 재확인 필수. 사용자 실수 방지</description>
+    </constraint>
+    <constraint>
+      <type>pattern</type>
+      <description>2단계 확인: 모달에서 이메일 입력 → 삭제 API 호출</description>
+    </constraint>
+    <constraint>
+      <type>naming</type>
+      <description>컴포넌트: AccountDeletionModal.tsx, API: deleteAccount()</description>
+    </constraint>
+    <constraint>
+      <type>storage</type>
+      <description>Supabase Storage에서 사용자의 모든 파일 삭제 (avatars/{userId}/*)</description>
+    </constraint>
+    <constraint>
+      <type>database</type>
+      <description>profiles 테이블에서 사용자 레코드 삭제. Cascading delete 설정</description>
+    </constraint>
+    <constraint>
+      <type>gdpr</type>
+      <description>사용자 삭제 요청 로깅. 규정 준수</description>
+    </constraint>
+    <constraint>
+      <type>ui</type>
+      <description>Shadcn/ui 모달. 빨간색 버튼으로 위험 작업 표시</description>
+    </constraint>
+  </constraints>
+
+  <interfaces>
+    <interface>
+      <name>deleteAccount API</name>
+      <kind>function</kind>
+      <signature>async function deleteAccount(password: string): Promise&lt;void&gt;</signature>
+      <path>apps/web/src/lib/api/auth-api.ts</path>
+    </interface>
+    <interface>
+      <name>deleteProfileImage API</name>
+      <kind>function</kind>
+      <signature>async function deleteProfileImages(userId: string): Promise&lt;void&gt;</signature>
+      <path>apps/web/src/lib/api/profile-api.ts</path>
+    </interface>
+    <interface>
+      <name>DELETE /api/auth/delete-account</name>
+      <kind>REST endpoint</kind>
+      <signature>POST /api/auth/delete-account { email: string }</signature>
+      <path>apps/web/src/app/api/auth/delete-account/route.ts (선택사항)</path>
+    </interface>
+    <interface>
+      <name>AccountDeletionModal Component</name>
+      <kind>React Component</kind>
+      <signature>interface AccountDeletionModalProps { isOpen: boolean; userEmail: string; onConfirm: () => void; onCancel: () => void; }</signature>
+      <path>apps/web/src/components/profile/AccountDeletionModal.tsx</path>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>
+      Vitest 유닛 테스트, React Testing Library 컴포넌트 테스트.
+      모달 렌더링, 이메일 검증, API 호출 테스트.
+      E2E 테스트: 계정 삭제 전체 플로우 (확인 → 로그인 페이지 리다이렉트).
+    </standards>
+    <locations>
+      apps/web/src/__tests__/account-deletion.test.ts
+      apps/web/src/components/profile/__tests__/
+    </locations>
+    <ideas>
+      AC1: 계정 삭제 버튼 렌더링 (프로필 페이지)
+      AC2: 모달 열기, 이메일 입력, 버튼 활성화/비활성화
+      AC3: 이메일 인증 링크 발송 (선택사항)
+      AC4: 데이터 삭제 확인 (auth.users, profiles, Storage)
+      AC6: 에러 메시지 표시
+      AC7: 삭제 완료 후 로그인 페이지로 리다이렉트
+      AC8: HTTPS 연결 확인
+    </ideas>
+  </tests>
+
+</story-context>

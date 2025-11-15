@@ -109,3 +109,20 @@ export const signInSchema = z.object({
 });
 
 export type SignInFormData = z.infer<typeof signInSchema>;
+
+/**
+ * 프로필 등록 폼 검증 스키마 (온보딩)
+ */
+export const profileSchema = z.object({
+  fullName: z
+    .string()
+    .min(2, '이름은 최소 2자 이상이어야 합니다')
+    .max(50, '이름은 최대 50자까지 입력 가능합니다')
+    .trim(),
+  bio: z
+    .string()
+    .max(500, '소개는 최대 500자까지 입력 가능합니다')
+    .optional(),
+});
+
+export type ProfileFormData = z.infer<typeof profileSchema>;
