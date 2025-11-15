@@ -119,15 +119,15 @@ development_status:
   epic-6-retrospective: optional
 
   # Epic 7: 대시보드 및 사용량 관리 (Dashboard & Usage Management) - 10 stories
-  epic-7: backlog
-  7-1-dashboard-main-screen-layout: backlog
-  7-2-stats-cards-weekly-status: backlog
-  7-3-content-calendar-view-monthly: backlog
-  7-4-usage-tracking-and-display: backlog
-  7-5-basic-analytics-data-total-count-approval-rate-trends: backlog
+  epic-7: contexted
+  7-1-dashboard-main-screen-layout: done
+  7-2-stats-cards-weekly-status: done
+  7-3-content-calendar-view-monthly: done
+  7-4-usage-tracking-and-display: done
+  7-5-basic-analytics-data-total-count-approval-rate-trends: done
   7-6-notification-center-header-notification-icon: backlog
   7-7-profile-dropdown-menu: backlog
   7-8-search-feature-content-search: backlog
-  7-9-empty-state-handling: backlog
+  7-9-empty-state-handling: done
   7-10-system-status-monitoring-admin: backlog
   epic-7-retrospective: optional
