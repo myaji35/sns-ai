@@ -1,4 +1,4 @@
-import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
@@ -7,28 +7,46 @@ export async function GET(request: Request) {
   const origin = requestUrl.origin;
 
   if (code) {
-    const supabase = await createServerSupabaseClient();
-    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+    const supabase = createClient();
 
-    if (!error && data.user) {
-      // Check if profile exists
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('id', data.user.id)
+    // Exchange the code for a session
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+    if (error) {
+      console.error('Error exchanging code for session:', error);
+      return NextResponse.redirect(`${origin}/member-login?error=로그인에 실패했습니다`);
+    }
+
+    // Get user info
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (user) {
+      const userEmail = user.email;
+
+      // Check if user's email matches any member company
+      const { data: memberCompany } = await supabase
+        .from('organizations')
+        .select('id, name')
+        .eq('email', userEmail)
+        .eq('organization_type', 'member')
         .single();
 
-      // Create profile if it doesn't exist (for Google OAuth users)
-      if (!profile) {
-        await supabase.from('profiles').insert({
-          id: data.user.id,
-          email: data.user.email,
-          full_name: data.user.user_metadata?.full_name || null,
-        });
+      if (memberCompany) {
+        // Update user's profile with the organization
+        await supabase
+          .from('profiles')
+          .update({ current_organization_id: memberCompany.id })
+          .eq('id', user.id);
+
+        // Redirect to member dashboard
+        return NextResponse.redirect(`${origin}/dashboard`);
+      } else {
+        // No matching organization found - redirect to request page
+        return NextResponse.redirect(`${origin}/access-pending`);
       }
     }
   }
 
-  // URL to redirect to after sign in process completes
-  return NextResponse.redirect(`${origin}/dashboard`);
+  // If no code or user, redirect to login
+  return NextResponse.redirect(`${origin}/member-login`);
 }

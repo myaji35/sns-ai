@@ -3,11 +3,13 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: ['error', 'warn', 'log'],
+  });
 
   // CORS 설정
   app.enableCors({
-    origin: 'http://localhost:3001', // Next.js Frontend
+    origin: ['http://localhost:3010', 'http://localhost:3001'], // Next.js Frontend
     credentials: true,
   });
 

@@ -13,6 +13,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
+      <head>
+        <meta charSet="UTF-8" />
+      </head>
       <body className="antialiased">{children}</body>
     </html>
   );

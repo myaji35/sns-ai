@@ -14,6 +14,7 @@
     "@hookform/resolvers": "^5.2.2",
     "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.81.1",
+    "@tosspayments/payment-sdk": "^1.9.2",
     "@types/node-fetch": "^2.6.13",
     "googleapis": "^166.0.0",
     "linkedin-api-client": "^0.3.0",
